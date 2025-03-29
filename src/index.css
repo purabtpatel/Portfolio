@@ -11,6 +11,7 @@
   --primary-blue: #3498db;
 
   --secondary-gray: #607B96;
+  --secondary-dark-gray: #293e55;
   --secondary-cyan: #3c9d93;
   --secondary-deep-blue: #4d5bce;
   --secondary-white: #ffffff;
@@ -24,8 +25,10 @@
   --accent-gray: #8babcc;
 
   --lines: #1e2d3d;
+
   --gradient-color-1: #4d5bce;
   --gradient-color-2: #43d9ad;
+  --gradient-color-3: #e99287;
 
   /* 🖋 Typography */
   font-family: 'Hack', monospace;

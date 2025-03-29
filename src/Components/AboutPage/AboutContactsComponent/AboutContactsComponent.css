@@ -1,0 +1,27 @@
+.contacts-dropdown {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--lines);
+  padding-top: 5px;
+  gap: 5px;
+}
+.dropdown-button {
+  background: none;
+  border: none;
+  color: var(--secondary-gray);
+  font-size: 12px;
+  display: flex;
+  align-items: center;;
+  gap: 10px;
+  cursor: pointer;
+  padding-left: 10px;
+}
+
+
+.dropdown-content {
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+  border-top: 1px solid var(--lines);
+  color: var(--secondary-gray);
+}

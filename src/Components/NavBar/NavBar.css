@@ -37,7 +37,7 @@
 }
 
 .navbar-links li:first-child a {
-    padding-right: 7.5em;
+    width: 215px; /* Ensures the first link has a minimum width */
 }
 
 .navbar-links li:last-child a {
