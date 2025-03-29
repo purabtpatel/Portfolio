@@ -1,0 +1,50 @@
+
+:root {
+  /* 🎨 Color Palette */
+  --default-dark: #0a1019;
+  --default-medium: #14202b;
+  --default-light: #263b50;
+
+  --primary-dark: #01080e;
+  --primary-medium: #011627;
+  --primary-light: #011221;
+  --primary-blue: #3498db;
+
+  --secondary-gray: #607B96;
+  --secondary-cyan: #3c9d93;
+  --secondary-deep-blue: #4d5bce;
+  --secondary-white: #ffffff;
+  --transparent-white: rgba(255, 255, 255, 0.5);
+
+  --accent-orange: #ff9f56;
+  --accent-orange-light: #ffac6b;
+  --accent-turquoise: #43d9ad;
+  --accent-pink: #e99287;
+  --accent-purple: #c98bdf;
+  --accent-gray: #8babcc;
+
+  --lines: #1e2d3d;
+  --gradient-color-1: #4d5bce;
+  --gradient-color-2: #43d9ad;
+
+  /* 🖋 Typography */
+  font-family: 'Hack', monospace;
+  font-size: 12px;
+  color: var(--secondary-white);
+}
+/* 
+html {
+  margin: 15px;
+  min-height: 100%;
+  overflow:hidden;
+} */
+
+html {
+  margin: 0;
+  padding: 25px;
+  min-height: 100%;
+  box-sizing: border-box; 
+  overflow: hidden;
+  background-color: var(--default-dark);
+}
+

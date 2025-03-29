@@ -1,0 +1,56 @@
+.footer {
+    border-top: 1px solid var(--lines);
+    display: flex;
+    align-items: center;
+}
+
+.footer span{
+    padding-left: 10px;
+    padding-right: 10px;
+    color: var(--accent-gray);
+}
+
+.footer-links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1; /* Allows the footer links to take up available space */
+    
+}
+
+.footer-links li {
+    display: flex;
+    align-items: center;
+    min-width: 40px; /* Ensures li expands to fit the anchor */
+    justify-content: center; /* Centers the text inside */
+
+
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: var(--secondary-gray);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adds spacing between icon and text */
+    padding: 10px;
+}
+
+.footer-links a:hover {
+    color: #f0a500;
+}
+
+.footer-links li:hover {
+    background-color: var(--secondary-gray);
+}
+
+.footer-links li:not(:last-child){
+    border-right: 1px solid var(--lines);
+    border-left: 1px solid var(--lines);}
+.footer-links li:last-child a {
+    border-left: 1px solid var(--lines);
+}
+
