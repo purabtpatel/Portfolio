@@ -1,0 +1,72 @@
+.code-card {
+    background-color: var(--primary-light);
+    border: 1px solid var(--lines);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    color: var(--secondary-white);
+    font-family: 'Hack', monospace;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .code-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .code-card-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .code-card-userinfo {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .code-card-username {
+    color: var(--secondary-cyan);
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .code-card-username:hover {
+    text-decoration: underline;
+  }
+  
+  .code-card-timestamp {
+    font-size: 11px;
+    color: var(--transparent-white);
+  }
+  
+  .code-card-snippet {
+    background-color: var(--default-medium);
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 300px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre;
+  }
+  
+  .code-card-footer {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .code-card-link {
+    color: var(--accent-turquoise);
+    text-decoration: none;
+    font-size: 12px;
+  }
+  
+  .code-card-link:hover {
+    text-decoration: underline;
+  }
+  

@@ -23,6 +23,10 @@
   --accent-pink: #e99287;
   --accent-purple: #c98bdf;
   --accent-gray: #8babcc;
+  
+  --accent-blue: rgb(133 165 196 / var(--tw-text-opacity));
+
+  --tw-text-opacity: 1;
 
   --lines: #1e2d3d;
 

@@ -1,0 +1,22 @@
+.code-showcase {
+    width: 55vw;
+    height: 100%;
+    max-height: calc(100vh - 50px); /* adjust this if needed */
+    overflow-y: auto;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  
+  .code-showcase h2 {
+    margin-bottom: 1rem;
+    color: var(--secondary-white);
+  }
+  
+  .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
