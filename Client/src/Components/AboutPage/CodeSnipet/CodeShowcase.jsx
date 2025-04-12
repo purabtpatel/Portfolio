@@ -16,14 +16,16 @@ const CodeShowcase = () => {
   }, []);
 
   return (
-    <div className="code-showcase">
-      <h2>Recent Contributions</h2>
-      <div className="grid">
-        {commits.map((commit, idx) => (
-          <CodeCard key={idx} {...commit} />
-        ))}
+    <>
+      <h2>// Code snippet showcase:</h2>
+      <div className="code-showcase">
+        <div className="grid">
+          {commits.map((commit, idx) => (
+            <CodeCard key={idx} {...commit} />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

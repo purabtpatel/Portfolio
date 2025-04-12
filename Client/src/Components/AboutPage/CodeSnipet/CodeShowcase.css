@@ -1,13 +1,15 @@
 .code-showcase {
-    width: 55vw;
-    height: 100%;
-    max-height: calc(100vh - 50px); /* adjust this if needed */
-    overflow-y: auto;
-    padding-right: 10px;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-  }
+  width: 55vw;
+  max-height: 78vh;
+  overflow-y: auto;
+  overflow-x: hidden; /* 👈 lock horizontal scroll */
+  padding-right: 10px;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
   
   .code-showcase h2 {
     margin-bottom: 1rem;
@@ -18,5 +20,20 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+  }
+
+  .code-showcase::-webkit-scrollbar{
+    width: 12px;
+    
+    background-color: var(--default-dark);
+    border-radius: 0px;
+    border-left: 1px solid var(--lines);
+    border-top: 1px solid var(--lines);
+    
+  }
+  .code-showcase::-webkit-scrollbar-thumb{
+    background-color: var(--secondary-gray);
+    border-radius: 0px;
+    
   }
   

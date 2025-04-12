@@ -49,10 +49,11 @@
     overflow-x: auto;
     overflow-y: auto;
     max-height: 300px;
-    margin-bottom: 12px;
     font-size: 12px;
     line-height: 1.5;
-    white-space: pre;
+    margin-top: 0;
+    margin-bottom: 0;
+    
   }
   
   .code-card-footer {
@@ -69,4 +70,95 @@
   .code-card-link:hover {
     text-decoration: underline;
   }
+  .code-card-body {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+  }
   
+  /* Left column: file selector */
+  .code-card-files {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Individual file buttons */
+  .file-button {
+    background-color: var(--default-medium);
+    border: 1px solid var(--lines);
+    color: var(--secondary-white);
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: 'Hack', monospace;
+    transition: background-color 0.2s ease;
+    width: 120px;
+    font-weight: bold;
+  }
+
+ 
+  .file-button.show-more-button {
+    background-color: #f1f1f1;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    max-width: 100px;
+  }
+  .file-button.show-more-button:hover{
+
+    background-color: #cccccc
+
+  }
+  
+  
+  .file-button:hover {
+    background-color: var(--default-dark);
+  }
+  
+  .file-button.active {
+    background-color: var(--accent-turquoise);
+    color: var(--primary-dark);
+    font-weight: bold;
+  }
+  
+  /* Right column: code viewer */
+  .code-card-viewer {
+    flex: 1;
+  }
+
+  .code-card-placeholder{
+    background-color: var(--default-medium);
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 300px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre;
+  }
+
+  
+
+  .code-card-snippet {
+    overflow-y: auto;
+  }
+  
+  .code-card-snippet::-webkit-scrollbar {
+    width: 10px;
+    border: 1px solid #ff0000;
+  }
+  
+  .code-card-snippet::-webkit-scrollbar-track {
+    background: #111;
+  }
+  
+  .code-card-snippet::-webkit-scrollbar-thumb {
+    background-color: #444;
+    border-radius: 0;
+   
+  }
