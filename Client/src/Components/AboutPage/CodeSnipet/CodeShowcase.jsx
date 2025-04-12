@@ -17,7 +17,9 @@ const CodeShowcase = () => {
 
   return (
     <>
-      <h2>// Code snippet showcase:</h2>
+      <div className='code-showcase-header'>
+       <h3>// Recent commits:</h3>
+      </div>
       <div className="code-showcase">
         <div className="grid">
           {commits.map((commit, idx) => (

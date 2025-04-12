@@ -1,6 +1,17 @@
+.code-showcase-header {
+  display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding-left: 10px;
+    max-height: 30px;
+    border-bottom: 1px solid var(--lines);
+    color: var(--secondary-gray);
+}
+
 .code-showcase {
   width: 55vw;
-  max-height: 78vh;
+  max-height: 80vh;
   overflow-y: auto;
   overflow-x: hidden; /* 👈 lock horizontal scroll */
   padding-right: 10px;
@@ -17,6 +28,8 @@
   }
   
   .grid {
+
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -34,6 +47,6 @@
   .code-showcase::-webkit-scrollbar-thumb{
     background-color: var(--secondary-gray);
     border-radius: 0px;
-    
+    background-color: #444;
   }
   

@@ -11,8 +11,12 @@
   
   .code-card-header {
     display: flex;
-    align-items: center;
+    
+    justify-content: space-between;
     margin-bottom: 10px;
+  }
+  .code-card-profile {
+    display: flex;
   }
   
   .code-card-avatar {
@@ -56,10 +60,6 @@
     
   }
   
-  .code-card-footer {
-    display: flex;
-    justify-content: space-between;
-  }
   
   .code-card-link {
     color: var(--accent-turquoise);
@@ -68,7 +68,7 @@
   }
   
   .code-card-link:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
   .code-card-body {
     display: flex;
@@ -146,11 +146,17 @@
 
   .code-card-snippet {
     overflow-y: auto;
+    overflow-x: hidden;
+    max-width: 42.5vw;
   }
   
   .code-card-snippet::-webkit-scrollbar {
-    width: 10px;
-    border: 1px solid #ff0000;
+    width: 12px;
+    
+    background-color: var(--default-dark);
+    border-radius: 0px;
+    border-left: 1px solid var(--lines);
+    border-top: 1px solid var(--lines);
   }
   
   .code-card-snippet::-webkit-scrollbar-track {
@@ -159,6 +165,37 @@
   
   .code-card-snippet::-webkit-scrollbar-thumb {
     background-color: #444;
-    border-radius: 0;
-   
-  }
+    }
+
+
+    .code-card-repoinfo {
+      background-color: var(--default-dark);
+      border: 1px solid var(--lines);
+      border-radius: 8px;
+      padding: 10px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9rem;
+      color: var(--secondary-white);
+      max-width: 100%;
+      word-break: break-word;
+    }
+    
+    .code-card-repoinfo span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .code-card-repo,
+    .code-card-message,
+    .code-card-file {
+      padding-top: 5px;
+      font-size: 0.9rem;
+      color: var(--secondary-light-gray);
+      display: inline-block;
+      width: 100%;
+    }
+    
