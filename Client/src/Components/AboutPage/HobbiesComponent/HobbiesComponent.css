@@ -1,0 +1,82 @@
+.hobbies-component {
+    display: flex;
+    flex-direction: row;
+    border-left: 1px solid var(--lines);
+    height: 100%;
+    color: var(--accent-blue);
+
+}
+
+.info-selection {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    border-right: 1px solid var(--lines);
+}
+
+.hobbies-button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    padding: 7px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: color 0.1s ease, background-color 0.1s ease;
+    text-align: left;
+    gap: 7px;
+    color: var(--accent-blue);
+    font-family: 'Fira Code Retina', monospace;
+}
+
+.hobbies-button:hover,
+.hobbies-button.selected {
+    color: var(--secondary-white);
+}
+
+.arrow-icon {
+    min-width: 14px;
+}
+
+.folder-icon {
+    transition: color 0.3s ease;
+}
+
+.folder-0 { color: var(--gradient-color-1); }
+.folder-1 { color: var(--gradient-color-2); }
+.folder-2 { color: var(--gradient-color-3); }
+
+.info-selection-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding-left: 10px;
+    max-height: 30px;
+    border-bottom: 1px solid var(--lines);
+    color: var(--secondary-white);
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.info-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    height: 10px;
+    border-right: 1px solid var(--lines);
+    width: 140px;
+}
+
+.info-content-body {
+    padding: 10px;
+    flex-grow: 1;
+    border-top: 1px solid var(--lines);
+    display: flex;
+    flex-direction: column;
+}

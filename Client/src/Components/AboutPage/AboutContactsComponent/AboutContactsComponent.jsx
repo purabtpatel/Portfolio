@@ -18,8 +18,8 @@ const AboutContactsComponent = () => {
             </button>
             {isContactsOpen && (
               <div className="dropdown-content">
-                <p>Email: example@email.com</p>
-                <p>Phone: (123) 456-7890</p>
+                <p>Email: purabtpatel@gmail.com</p>
+                <p>Phone: (732)692-3419</p>
               </div>
             )}
           </div>

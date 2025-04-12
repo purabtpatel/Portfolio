@@ -8,7 +8,8 @@
 .dropdown-button {
   background: none;
   border: none;
-  color: var(--secondary-gray);
+  color: var(--secondary-white);
+  font-family: 'Fira Code Retina', monospace;
   font-size: 12px;
   display: flex;
   align-items: center;;
@@ -23,5 +24,7 @@
   gap: 5px;
   padding: 10px;
   border-top: 1px solid var(--lines);
-  color: var(--secondary-gray);
+  color: var(--accent-blue);
+  font-size: 11px;
+
 }
