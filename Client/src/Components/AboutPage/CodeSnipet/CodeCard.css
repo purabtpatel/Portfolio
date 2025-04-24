@@ -7,6 +7,7 @@
     color: var(--secondary-white);
     font-family: 'Hack', monospace;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    
   }
   
   .code-card-header {
@@ -74,6 +75,7 @@
     display: flex;
     gap: 16px;
     margin-top: 16px;
+    justify-content: space-between
   }
   
   /* Left column: file selector */
@@ -127,6 +129,7 @@
   /* Right column: code viewer */
   .code-card-viewer {
     flex: 1;
+    max-width: 46vw;
   }
 
   .code-card-placeholder{

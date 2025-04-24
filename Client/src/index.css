@@ -24,13 +24,15 @@
   --accent-turquoise: #43d9ad;
   --accent-pink: #e99287;
   --accent-purple: #c98bdf;
-  --accent-gray: #8babcc;
+
   
   --accent-blue: rgb(133 165 196 / var(--tw-text-opacity));
 
   --tw-text-opacity: 1;
 
   --lines: #1e2d3d;
+  --bright-lines: #85A5C4;
+  --bluer-lines: #799ffb;
 
   --gradient-color-1: #4d5bce;
   --gradient-color-2: #43d9ad;
@@ -40,6 +42,8 @@
   font-family: 'Hack', monospace;
   font-size: 12px;
   color: var(--secondary-white);
+
+  --button-background: #1c2b3a;
 }
 /* 
 html {

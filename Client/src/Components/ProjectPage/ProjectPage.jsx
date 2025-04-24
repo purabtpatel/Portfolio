@@ -1,10 +1,12 @@
 import React from 'react';
+import ProjectGrid from './ProjectGridComponent/ProjectGrid'; // Adjust the path as necessary
+import ProjectFilter from './ProjectFilterComponent/ProjectFilter';
 
 const ProjectPage = () => {
     return (
         <div>
-            <h1>Project Page</h1>
-            <p>Welcome to the Project Page!</p>
+        <ProjectFilter/>
+        <ProjectGrid />
         </div>
     );
 };

@@ -46,11 +46,11 @@ const CodeCard = ({ message, url, repo, timestamp, files }) => {
             </div>
           </div>
           {selectedFile && (
-              <span className="code-card-file">File: {shortenFilenameExtended(selectedFile.filename, 30)}</span>
-            )}
-            {!selectedFile && files.length > 0 && (
-              <></>
-            )}
+            <span className="code-card-file">File: {selectedFile.filename}</span>
+          )}
+          {!selectedFile && files.length > 0 && (
+            <></>
+          )}
         </div>
         <a href={`https://github.com/${repo}/commit/${url.split('/').pop()}`} target="_blank" rel="noopener noreferrer" className="code-card-link">
           <div className='code-card-repoinfo'>
@@ -95,11 +95,16 @@ const CodeCard = ({ message, url, repo, timestamp, files }) => {
 
         {/* Code Snippet viewer on the right */}
         <div className="code-card-viewer">
-          {selectedFile ? (
-            <CodeSnippet key={selectedFile.raw_url} raw_url={selectedFile.raw_url} />
-          ) : (
-            <div className="code-card-placeholder">Select a file to view the code snippet</div>
-          )}
+          {
+            files.length > 0 ? (selectedFile ? (<CodeSnippet key={selectedFile.raw_url} raw_url={selectedFile.raw_url} />
+              ) : (
+                <div className="code-card-placeholder">Select a file to view the code snippet</div>
+              )
+            ) : (
+              <div className="code-card-placeholder">No signficant changes</div>
+            )
+          }
+
         </div>
       </div>
     </div>
@@ -116,14 +121,14 @@ const shortenFilenameExtended = (filename) => {
   const maxLength = 25;
   if (!filename || maxLength <= 3) return filename; // Handle empty or invalid cases
   if (filename.length <= maxLength) return filename;
-  
+
   const ellipsisLength = 3; // For "..."
   const endLength = Math.floor(maxLength * 0.7); // Bias: 70% of available chars for end
   const startLength = maxLength - endLength - ellipsisLength; // Remaining chars for start
-  
+
   const start = filename.slice(0, startLength);
   const end = filename.slice(-endLength);
-  
+
   return `${start}...${end}`;
 };
 
