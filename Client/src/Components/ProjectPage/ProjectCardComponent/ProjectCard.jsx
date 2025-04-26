@@ -14,7 +14,7 @@ const tagColors = {
   // Add more as needed
 };
 
-const ProjectCard = ({ title, shortDescription, longDescription, image, projectUrl, tags = [] }) => {
+const ProjectCard = ({ title, shortDescription, longDescription, image, projectUrl, websiteUrl, tags = [] }) => {
   return (
     <div className="project-card-container">
       <div className="project-card-header">
@@ -46,9 +46,18 @@ const ProjectCard = ({ title, shortDescription, longDescription, image, projectU
 
         <div className="project-card-content">
           <p className="description">{longDescription}</p>
-          <a href={projectUrl} target="_blank" rel="noopener noreferrer" className="project-link">
-            View Project
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          {websiteUrl && (
+          <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className="project-link">
+            View website
           </a>
+
+          )}
+          
+          <a href={projectUrl} target="_blank" rel="noopener noreferrer" className="project-link">
+            View Project on GitHub
+          </a>
+          </div>
         </div>
       </div>
     </div>

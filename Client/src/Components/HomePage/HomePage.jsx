@@ -1,9 +1,10 @@
 import React from 'react';
+import SnakeGame from '../Games/SnakeGame';
 
 const HomePage = () => {
     return (
         <div>
-            <h1>Welcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home PageWelcome to the Home Page</h1>
+          <SnakeGame />
         </div>
     );
 };

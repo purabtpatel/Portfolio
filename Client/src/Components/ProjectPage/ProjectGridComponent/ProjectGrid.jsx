@@ -11,20 +11,21 @@ const sampleProjects = [
     {
         id: 1,
         title: 'Project 1',
-        shortDescription: 'xr-simulator',
-        description: 'Duis aute irure dolor in velit esse cillum dolore.',
+        shortDescription: 'Financials',
+        description: 'Quickly visualize financial data with this tool.',
         // Replace with your actual image URLs or import them
         image: backgroundImageOne,
-        projectUrl: '#', // Replace with actual link to project
+        projectUrl: 'https://github.com/purabtpatel/Financials', // Replace with actual link to project
         tags: ['React', 'CSS'] // Example tags
     },
     {
         id: 2,
         title: 'Project 2',
-        shortDescription: 'xr-simulator',
-        description: 'Duis aute irure dolor in velit esse cillum dolore.',
+        shortDescription: 'Business Radar',
+        description: 'Tailor made for sales and marketing teams.',
         image: backgroundImageTwo,
-        projectUrl: '#',
+        projectUrl: 'https://github.com/purabtpatel/UBSBusinessTracker',
+        websiteUrl: 'https://www.businessradar.biz', // Optional website URL
         tags: ['WebXR', 'Three.js']
     }
     // Add more project objects here
@@ -54,6 +55,7 @@ const ProjectGrid = ({ projects = sampleProjects }) => { // Use sample data as d
                             longDescription={project.description}
                             image={project.image}
                             projectUrl={project.projectUrl}
+                            websiteUrl={project.websiteUrl} // Optional
                             tags={project.tags}
                         />
                     ))
