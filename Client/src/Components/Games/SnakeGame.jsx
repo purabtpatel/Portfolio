@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import './SnakeGame.css'; // 👈 import the new CSS
+import './SnakeGame.css'; 
 
 const CELL_SIZE = 10;
 const BOARD_SIZE = 40;
@@ -10,7 +10,7 @@ function generateInitialSnake() {
     const startX = 20;
     const startY = 20;
     const initialLength = 5;
-    const initialDirection = { x: 0, y: -1 }; // Moving upward
+    const initialDirection = { x: 0, y: -1 }; 
 
     const snake = [];
     for (let i = 0; i < initialLength; i++) {
