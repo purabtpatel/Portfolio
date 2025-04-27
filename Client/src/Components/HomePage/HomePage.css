@@ -1,0 +1,10 @@
+.game-card {
+    max-width: 500px;
+    margin: 2rem auto;
+    background-image:linear-gradient(rgb(35, 123, 109), rgba(67, 217, 173, 0.13));
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    color : var(--default-medium);
+  }

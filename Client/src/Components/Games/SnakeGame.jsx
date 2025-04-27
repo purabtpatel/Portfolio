@@ -31,12 +31,11 @@ function generateFood() {
 }
 
 
-export default function SnakeGameCard() {
+const SnakeGame = ({ score, setScore }) => {
     const canvasRef = useRef(null);
     const [snake, setSnake] = useState(generateInitialSnake());
     const [food, setFood] = useState(generateFood);
     const [direction, setDirection] = useState({ x: 0, y: -1 });
-    const [score, setScore] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [isGameOver, setIsGameOver] = useState(false);
 
@@ -156,9 +155,9 @@ export default function SnakeGameCard() {
         ctx.clearRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
 
         ctx.save();
-        ctx.shadowColor = "#f87171";
+        ctx.shadowColor = `rgba(67, 217, 173)`;
         ctx.shadowBlur = 20;
-        ctx.fillStyle = "#f87171";
+        ctx.fillStyle = `rgba(67, 217, 173)`;
         ctx.beginPath();
         ctx.arc(
             food.x * CELL_SIZE + CELL_SIZE / 2,
@@ -172,18 +171,18 @@ export default function SnakeGameCard() {
 
         snake.forEach((segment, index) => {
             const t = index / snake.length;
-            const minAlpha = 0.3;
-            const alpha = Math.max(1 - t, minAlpha);
-            ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`;
+            const minAlpha = 0.1;
+            const alpha = 1-t + minAlpha;
+            ctx.fillStyle = `rgba(67, 217, 173, ${alpha})`;
             ctx.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         });
 
 
         if (isGameOver) {
-             ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+             ctx.fillStyle = "rgba(0, 0, 0, 0)";
              ctx.fillRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
 
-             ctx.fillStyle = "#FFFFFF";
+             ctx.fillStyle = `rgba(67, 217, 173)`;
             ctx.font = "bold 30px Arial";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -192,14 +191,12 @@ export default function SnakeGameCard() {
             const centerY = (BOARD_SIZE * CELL_SIZE) / 2;
 
             ctx.fillText("Game Over!", centerX, centerY - 20);
-            ctx.font = "bold 20px Arial";
-            ctx.fillText(`Final Score: ${score}`, centerX, centerY + 20);
         }
     }, [snake, food, isGameOver, score]);
 
     return (
-        <div className="snake-card">
-            <p className="snake-score">Score: {score}</p>
+        <div>
+            
 
             <div className="snake-board-wrapper">
                 <canvas
@@ -225,3 +222,5 @@ export default function SnakeGameCard() {
         </div>
     );
 }
+
+export default SnakeGame;

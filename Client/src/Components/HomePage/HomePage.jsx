@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SnakeGame from '../Games/SnakeGame';
+import './HomePage.css';
 
 const HomePage = () => {
+    const [score, setScore] = useState(0);
+    
     return (
-        <div>
-          <SnakeGame />
+        <div className="game-card">
+        <p>Score: {score}</p>
+          <SnakeGame 
+            score={score} 
+            setScore={setScore} 
+          />
         </div>
     );
 };
