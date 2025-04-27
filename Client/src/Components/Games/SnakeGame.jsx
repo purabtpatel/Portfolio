@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import './SnakeGame.css'; 
+import { useEffect, useRef, useState, useCallback } from "react";
+import './SnakeGame.css';
 
 const CELL_SIZE = 10;
 const BOARD_SIZE = 40;
 const TICK_RATE = 75;
-;
+
 
 function generateInitialSnake() {
     const startX = 20;
     const startY = 20;
     const initialLength = 5;
-    const initialDirection = { x: 0, y: -1 }; 
+    const initialDirection = { x: 0, y: -1 };
 
     const snake = [];
     for (let i = 0; i < initialLength; i++) {
@@ -23,6 +23,14 @@ function generateInitialSnake() {
 }
 
 
+function generateFood() {
+    return {
+        x: Math.floor(Math.random() * BOARD_SIZE),
+        y: Math.floor(Math.random() * BOARD_SIZE),
+    };
+}
+
+
 export default function SnakeGameCard() {
     const canvasRef = useRef(null);
     const [snake, setSnake] = useState(generateInitialSnake());
@@ -32,17 +40,35 @@ export default function SnakeGameCard() {
     const [isRunning, setIsRunning] = useState(false);
     const [isGameOver, setIsGameOver] = useState(false);
 
-    function generateFood() {
-        return {
-            x: Math.floor(Math.random() * BOARD_SIZE),
-            y: Math.floor(Math.random() * BOARD_SIZE),
-        };
-    }
+    const latestDirection = useRef(direction);
+    const latestFood = useRef(food);
+    const latestSnake = useRef(snake);
+
+    useEffect(() => {
+        latestDirection.current = direction;
+    }, [direction]);
+
+    useEffect(() => {
+        latestFood.current = food;
+    }, [food]);
+
+    useEffect(() => {
+        latestSnake.current = snake;
+    }, [snake]);
+
 
     const handleStart = () => {
-        setSnake(generateInitialSnake());
-        setFood(generateFood());
-        setDirection({ x: 0, y: -1 });
+        const initialSnake = generateInitialSnake();
+        const initialFood = generateFood();
+        const initialDirection = { x: 0, y: -1 };
+
+        setSnake(initialSnake);
+        setFood(initialFood);
+        setDirection(initialDirection);
+        latestSnake.current = initialSnake;
+        latestFood.current = initialFood;
+        latestDirection.current = initialDirection;
+
         setScore(0);
         setIsRunning(true);
         setIsGameOver(false);
@@ -50,94 +76,126 @@ export default function SnakeGameCard() {
 
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (!isRunning) return;
-            if (e.key === "ArrowUp" && direction.y !== 1) setDirection({ x: 0, y: -1 });
-            if (e.key === "ArrowDown" && direction.y !== -1) setDirection({ x: 0, y: 1 });
-            if (e.key === "ArrowLeft" && direction.x !== 1) setDirection({ x: -1, y: 0 });
-            if (e.key === "ArrowRight" && direction.x !== -1) setDirection({ x: 1, y: 0 });
+            if (!isRunning || isGameOver) return;
+
+            const currentDirection = latestDirection.current;
+
+            if (e.key === "ArrowUp" && currentDirection.y !== 1) setDirection({ x: 0, y: -1 });
+            else if (e.key === "ArrowDown" && currentDirection.y !== -1) setDirection({ x: 0, y: 1 });
+            else if (e.key === "ArrowLeft" && currentDirection.x !== 1) setDirection({ x: -1, y: 0 });
+            else if (e.key === "ArrowRight" && currentDirection.x !== -1) setDirection({ x: 1, y: 0 });
         };
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [direction, isRunning]);
+    }, [isRunning, isGameOver]);
+
+    const runGameTick = useCallback(() => {
+        const currentSnake = latestSnake.current;
+        const currentDirection = latestDirection.current;
+        const currentFood = latestFood.current;
+
+        const newHead = {
+            x: currentSnake[0].x + currentDirection.x,
+            y: currentSnake[0].y + currentDirection.y,
+        };
+
+        if (
+            newHead.x < 0 ||
+            newHead.x >= BOARD_SIZE ||
+            newHead.y < 0 ||
+            newHead.y >= BOARD_SIZE
+        ) {
+            setIsRunning(false);
+            setIsGameOver(true);
+            return;
+        }
+
+         const willCollide = currentSnake.slice(1).some(
+            (segment) => segment.x === newHead.x && segment.y === newHead.y
+         );
+         if (willCollide) {
+              setIsRunning(false);
+              setIsGameOver(true);
+              return;
+         }
+
+
+        let newSnake = [...currentSnake];
+        let ateFood = false;
+
+        if (newHead.x === currentFood.x && newHead.y === currentFood.y) {
+            ateFood = true;
+            newSnake.unshift(newHead);
+            setFood(generateFood());
+            setScore((prev) => prev + 1);
+
+        } else {
+             newSnake.unshift(newHead);
+             newSnake.pop();
+        }
+
+        setSnake(newSnake);
+
+    }, []);
 
     useEffect(() => {
-        if (!isRunning) return;
+        if (!isRunning || isGameOver) {
+            return;
+        }
 
-        const intervalId = setInterval(() => {
-            setSnake((prevSnake) => {
-                const newHead = {
-                    x: prevSnake[0].x + direction.x,
-                    y: prevSnake[0].y + direction.y,
-                };
-
-                if (
-                    newHead.x < 0 ||
-                    newHead.x >= BOARD_SIZE ||
-                    newHead.y < 0 ||
-                    newHead.y >= BOARD_SIZE ||
-                    prevSnake.some((segment) => segment.x === newHead.x && segment.y === newHead.y)
-                ) {
-                    setIsRunning(false);
-                    setIsGameOver(true);
-                    return prevSnake;
-                }
-
-                let newSnake;
-                if (newHead.x === food.x && newHead.y === food.y) {
-                    newSnake = [newHead, ...prevSnake];
-                    setFood(generateFood());
-                    setScore((prev) => prev + 1);
-                } else {
-                    newSnake = [newHead, ...prevSnake.slice(0, -1)];
-                }
-
-                return newSnake;
-            });
-        }, TICK_RATE);
+        const intervalId = setInterval(runGameTick, TICK_RATE);
 
         return () => clearInterval(intervalId);
-    }, [direction, food, isRunning]);
+    }, [isRunning, isGameOver, runGameTick]);
 
     useEffect(() => {
-        const ctx = canvasRef.current.getContext("2d");
+        if (!canvasRef.current) return;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
 
-        
-        ctx.save(); 
-
-        ctx.shadowColor = "#f87171";    // Red glow
-        ctx.shadowBlur = 20;            // Adjust glow strength
-        ctx.fillStyle = "#f87171";      // Fill color (solid)
+        ctx.save();
+        ctx.shadowColor = "#f87171";
+        ctx.shadowBlur = 20;
+        ctx.fillStyle = "#f87171";
         ctx.beginPath();
         ctx.arc(
             food.x * CELL_SIZE + CELL_SIZE / 2,
             food.y * CELL_SIZE + CELL_SIZE / 2,
-            CELL_SIZE * 0.4, 
+            CELL_SIZE * 0.4,
             0,
             Math.PI * 2
         );
         ctx.fill();
-
         ctx.restore();
 
         snake.forEach((segment, index) => {
-            const t = index / snake.length; 
+            const t = index / snake.length;
             const minAlpha = 0.3;
-            const alpha = Math.max(1 - t, minAlpha); ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`; // Green with dynamic alpha
+            const alpha = Math.max(1 - t, minAlpha);
+            ctx.fillStyle = `rgba(74, 222, 128, ${alpha})`;
             ctx.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         });
 
 
         if (isGameOver) {
-            ctx.fillStyle = "rgba(0, 0, 0, 0)";
-            ctx.fillRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
-            ctx.fillStyle = "#43d9ad"
-            ctx.font = "bold 24px Arial";
+             ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+             ctx.fillRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
+
+             ctx.fillStyle = "#FFFFFF";
+            ctx.font = "bold 30px Arial";
             ctx.textAlign = "center";
-            ctx.fillText("Game Over", (BOARD_SIZE * CELL_SIZE) / 2, (BOARD_SIZE * CELL_SIZE) / 2);
+            ctx.textBaseline = "middle";
+
+            const centerX = (BOARD_SIZE * CELL_SIZE) / 2;
+            const centerY = (BOARD_SIZE * CELL_SIZE) / 2;
+
+            ctx.fillText("Game Over!", centerX, centerY - 20);
+            ctx.font = "bold 20px Arial";
+            ctx.fillText(`Final Score: ${score}`, centerX, centerY + 20);
         }
-    }, [snake, food, isGameOver]);
+    }, [snake, food, isGameOver, score]);
 
     return (
         <div className="snake-card">
