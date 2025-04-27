@@ -110,14 +110,14 @@ const SnakeGame = ({ score, setScore }) => {
             return;
         }
 
-         const willCollide = currentSnake.slice(1).some(
+        const willCollide = currentSnake.slice(1).some(
             (segment) => segment.x === newHead.x && segment.y === newHead.y
-         );
-         if (willCollide) {
-              setIsRunning(false);
-              setIsGameOver(true);
-              return;
-         }
+        );
+        if (willCollide) {
+            setIsRunning(false);
+            setIsGameOver(true);
+            return;
+        }
 
 
         let newSnake = [...currentSnake];
@@ -130,8 +130,8 @@ const SnakeGame = ({ score, setScore }) => {
             setScore((prev) => prev + 1);
 
         } else {
-             newSnake.unshift(newHead);
-             newSnake.pop();
+            newSnake.unshift(newHead);
+            newSnake.pop();
         }
 
         setSnake(newSnake);
@@ -172,17 +172,17 @@ const SnakeGame = ({ score, setScore }) => {
         snake.forEach((segment, index) => {
             const t = index / snake.length;
             const minAlpha = 0.1;
-            const alpha = 1-t + minAlpha;
+            const alpha = 1 - t + minAlpha;
             ctx.fillStyle = `rgba(67, 217, 173, ${alpha})`;
             ctx.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         });
 
 
         if (isGameOver) {
-             ctx.fillStyle = "rgba(0, 0, 0, 0)";
-             ctx.fillRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
+            ctx.fillStyle = "rgba(0, 0, 0, 0)";
+            ctx.fillRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
 
-             ctx.fillStyle = `rgba(67, 217, 173)`;
+            ctx.fillStyle = `rgba(67, 217, 173)`;
             ctx.font = "bold 30px Arial";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -196,7 +196,7 @@ const SnakeGame = ({ score, setScore }) => {
 
     return (
         <div>
-            
+
 
             <div className="snake-board-wrapper">
                 <canvas
@@ -205,20 +205,21 @@ const SnakeGame = ({ score, setScore }) => {
                     height={BOARD_SIZE * CELL_SIZE}
                     className="snake-canvas"
                 />
+
+                <div className="snake-buttons">
+                    {!isRunning && !isGameOver && (
+                        <button onClick={handleStart} className="snake-button start">
+                            Start Game
+                        </button>
+                    )}
+                    {isGameOver && (
+                        <button onClick={handleStart} className="snake-button restart">
+                            Restart Game
+                        </button>
+                    )}
+                </div>
             </div>
 
-            <div className="snake-buttons">
-                {!isRunning && !isGameOver && (
-                    <button onClick={handleStart} className="snake-button start">
-                        Start Game
-                    </button>
-                )}
-                {isGameOver && (
-                    <button onClick={handleStart} className="snake-button restart">
-                        Restart Game
-                    </button>
-                )}
-            </div>
         </div>
     );
 }

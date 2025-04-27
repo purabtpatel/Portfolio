@@ -7,11 +7,11 @@ const HomePage = () => {
     
     return (
         <div className="game-card">
-        <p>Score: {score}</p>
-          <SnakeGame 
+            <p>Score: {score}</p>
+            <SnakeGame 
             score={score} 
             setScore={setScore} 
-          />
+            />
         </div>
     );
 };

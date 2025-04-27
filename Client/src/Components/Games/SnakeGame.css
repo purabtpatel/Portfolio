@@ -17,6 +17,7 @@
     padding: 10px;
     border-radius: 12px;
     display: inline-block;
+    position: relative;
   }
   
   .snake-canvas {
@@ -28,7 +29,15 @@
   }
   
   .snake-buttons {
-    margin-top: 20px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    display: flex;
+    transform: translateX(-50%);
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    
   }
   
   .snake-button {
