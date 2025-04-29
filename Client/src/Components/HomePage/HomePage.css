@@ -1,10 +1,111 @@
+.home-page {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    height: 100%;
+    color: var(--secondary-light-gray);
+}
+
+.home-page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 32px; 
+}
+
+.home-page-header h1 {
+    font-size: 72px;
+    line-height: 72px;   
+}
+
+.home-page-header span {
+    font-size: 22px;
+    line-height: 24px;
+}
+
+.home-page-header span,
+.home-page-header h1 {
+    margin: 0;
+}
+
+.blue-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--gradient-color-1);
+    font-size: 40px; 
+    line-height: 1;
+}
+
+.blue-text-symbol {
+    font-size: 54px; 
+    transform: scale(1.5);
+    margin-right: 10px;
+    color: var(--gradient-color-1);
+    line-height: 1;
+}
+
+.blue-text h2 {
+    overflow: hidden; 
+    border-right: 2px solid black;
+    white-space: nowrap;
+    letter-spacing: 2px;
+    animation: typing 3s steps(40) 1s 1 normal both, blink 0.75s steps(40) infinite normal;
+    font-size: 2.5rem; 
+    line-height: 1.2;
+}
+
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+
+@keyframes blink {
+    from { border-right-color: rgba(255, 255, 255, .75) }
+    to { border-right-color: transparent }
+}
+
 .game-card {
-    max-width: 500px;
-    margin: 2rem auto;
-    background-image:linear-gradient(rgb(35, 123, 109), rgba(67, 217, 173, 0.13));
+    background-image: linear-gradient(rgb(35, 123, 109), rgba(67, 217, 173, 0.13));
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     border-radius: 16px;
-    padding: 24px;
+    padding: 32px; 
     text-align: center;
-    color : var(--default-medium);
-  }
+    color: var(--default-medium);
+}
+
+.home-page-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px; 
+    margin-bottom: 32px;
+}
+
+.home-page-comments {
+    color: var(--bright-lines);
+    font-size: 18px; 
+    line-height: 20px;
+}
+
+.home-page-code {
+    font-size: 18px; 
+    line-height: 20px;
+}
+
+.home-page-const {
+    color: var(--gradient-color-1);
+}
+
+.home-page-variable {
+    color: var(--gradient-color-2);
+}
+
+.home-page-link {
+    color: var(--gradient-color-3);
+}

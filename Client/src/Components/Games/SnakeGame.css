@@ -21,7 +21,7 @@
   }
   
   .snake-canvas {
-    background-color: var(--primary-medium);
+    background-color: var(--default-medium);
     border-radius: 8px;
     display: block;
     box-shadow: inset 0 2px 8px rgb(0, 0, 0);

@@ -1,5 +1,5 @@
 .code-card {
-    background-color: var(--primary-light);
+    background-color: var(--slate-925);
     border: 1px solid var(--lines);
     border-radius: 10px;
     padding: 16px;
@@ -117,12 +117,12 @@
   
   
   .file-button:hover {
-    background-color: var(--default-dark);
+    background-color: var(--slate-950);
   }
   
   .file-button.active {
     background-color: var(--accent-turquoise);
-    color: var(--primary-dark);
+    color: var(--slate-950);
     font-weight: bold;
   }
   
@@ -156,7 +156,7 @@
   .code-card-snippet::-webkit-scrollbar {
     width: 12px;
     
-    background-color: var(--default-dark);
+    background-color: var(--slate-950);
     border-radius: 0px;
     border-left: 1px solid var(--lines);
     border-top: 1px solid var(--lines);
@@ -172,7 +172,7 @@
 
 
     .code-card-repoinfo {
-      background-color: var(--default-dark);
+      background-color: var(--slate-950);
       border: 1px solid var(--lines);
       border-radius: 8px;
       padding: 10px 15px;

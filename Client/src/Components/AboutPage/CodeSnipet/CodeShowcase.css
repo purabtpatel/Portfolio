@@ -38,7 +38,7 @@
   .code-showcase::-webkit-scrollbar{
     width: 12px;
     
-    background-color: var(--default-dark);
+    background-color: var(--slate-950);
     border-radius: 0px;
     border-left: 1px solid var(--lines);
     border-top: 1px solid var(--lines);

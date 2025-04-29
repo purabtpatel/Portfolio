@@ -2,7 +2,7 @@
 
 /* .App{
   border-radius: 10px;
-  background-color: var(--primary-medium);
+  background-color: var(--default-medium);
   min-height: 100vh;
   
   overflow-y: hidden;
@@ -11,7 +11,7 @@
 
 .App {
   border-radius: 10px;
-  background-color: var(--primary-medium);
+  background-color: var(--slate-900);
 
   height: calc(100vh - 65px); /* Adjust height based on the 15px padding on each side */
   display: flex;
@@ -25,4 +25,5 @@
 
 .main-content {
   flex: 1; /* Pushes footer to bottom */
+  
 }

@@ -2,12 +2,13 @@
     border-top: 1px solid var(--lines);
     display: flex;
     align-items: center;
+    height: 50px;
 }
 
 .footer span{
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 20px; 
     color: var(--bright-lines);
+    font-size: 16px;
 }
 
 .footer-links {
@@ -17,6 +18,7 @@
     display: flex;
     justify-content: space-between;
     flex-grow: 1; /* Allows the footer links to take up available space */
+    height: 50px;
     
 }
 
@@ -26,7 +28,7 @@
     min-width: 40px; /* Ensures li expands to fit the anchor */
     justify-content: center; /* Centers the text inside */
 
-
+    height: 50px;
 }
 
 .footer-links a {
@@ -35,8 +37,9 @@
     font-size: 16px;
     display: flex;
     align-items: center;
-    gap: 8px; /* Adds spacing between icon and text */
-    padding: 10px;
+    gap: 8px; 
+    padding: 0 20px; 
+    height: 50px;
 }
 
 .footer-links a:hover {
@@ -44,7 +47,7 @@
 }
 
 .footer-links li:hover {
-    background-color: var(--secondary-gray);
+    background-color: var(--default-medium);
 }
 
 .footer-links li:not(:last-child){

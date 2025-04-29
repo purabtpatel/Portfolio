@@ -173,7 +173,7 @@
   
   .project-card-content {
     padding: 16px;
-    background-color: var( --primary-light);
+    background-color: var( --default-medium);
     border-top: 1px solid var(--lines);
     
   }
