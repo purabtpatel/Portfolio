@@ -9,6 +9,9 @@
     line-height: 1.5;
     margin-top: 0;
     margin-bottom: 0;
+    border-left: 1px solid var(--lines);
+    border-top: 1px solid var(--lines);
+    border-bottom: 1px solid var(--lines);
   }
   
   .code-snippet-line {
@@ -33,15 +36,22 @@
     width: 12px;
     
     background-color: var(--slate-950);
-    border-radius: 0px;
-    border-left: 1px solid var(--lines);
-    border-top: 1px solid var(--lines);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+   
   }
   
   .code-snippet-container::-webkit-scrollbar-track {
-    background: #111;
+    background: var(--slate-950);
+    border: 1px solid var(--lines);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    
+
   }
   
   .code-snippet-container::-webkit-scrollbar-thumb {
     background-color: #444;
-    }
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}

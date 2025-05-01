@@ -13,40 +13,48 @@ const CodeComment = ({ text }) => {
 
     const splitHighlightedHTMLIntoLines = (highlightedHTML, containerWidth) => {
         const charPerRow = Math.max(10, Math.floor(containerWidth / 8));
-
-        const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = highlightedHTML;
-        const plainText = tempDiv.textContent || ""; // to measure actual line length
-
+        const container = document.createElement("div");
+        container.innerHTML = highlightedHTML;
+    
+        const lines = [];
         let currentLine = "";
-        let raw = "";
-        let visibleChars = 0;
-        const output = [];
-
-        const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, null);
-        let node;
-
-        while ((node = walker.nextNode())) {
-            const nodeText = node.nodeType === Node.TEXT_NODE ? node.textContent : node.outerHTML;
-            const textContent = node.nodeType === Node.TEXT_NODE ? node.textContent : node.textContent;
-
-            for (let i = 0; i < textContent.length; i++) {
-                raw += nodeText[i] || "";
-                visibleChars++;
-
-                if (visibleChars >= charPerRow) {
-                    output.push(raw);
-                    raw = "";
-                    visibleChars = 0;
+        let currentLength = 0;
+    
+        const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    
+        while (walker.nextNode()) {
+            const node = walker.currentNode;
+    
+            const processWord = (word, className = "") => {
+                const cleanWord = word.replace(/\s/g, "\u00A0"); // preserve spacing
+                const styledWord = className
+                    ? `<span class="${className}">${cleanWord}</span>`
+                    : cleanWord;
+    
+                if (currentLength + word.length > charPerRow) {
+                    if (currentLine.trim()) lines.push(currentLine.trim());
+                    currentLine = "";
+                    currentLength = 0;
                 }
+    
+                currentLine += styledWord;
+                currentLength += word.length;
+            };
+    
+            if (node.nodeType === Node.TEXT_NODE) {
+                const words = node.textContent.split(/(\s+)/); // split and preserve whitespace
+                words.forEach(word => processWord(word));
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                const words = node.textContent.split(/(\s+)/);
+                words.forEach(word => processWord(word, node.className));
             }
         }
-
-        if (raw.trim()) {
-            output.push(raw);
+    
+        if (currentLine.trim()) {
+            lines.push(currentLine.trim());
         }
-
-        return output;
+    
+        return lines;
     };
 
     useEffect(() => {
