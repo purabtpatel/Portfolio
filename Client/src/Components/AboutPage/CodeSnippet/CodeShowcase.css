@@ -4,7 +4,7 @@
     align-items: center;
     gap: 10px;
     padding-left: 10px;
-    max-height: 30px;
+    height: 40px;
     border-bottom: 1px solid var(--lines);
     color: var(--secondary-gray);
 }

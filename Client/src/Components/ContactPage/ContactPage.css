@@ -1,13 +1,21 @@
-.contactPage{
-
-
+.contactPage {
+    display: flex;
+    flex-direction: row;
+    height: 100%; /* Make it take all vertical space */
 }
 
-.contactForm{
+.contactHeader{
+    border-right: 1px solid var(--lines);
+    width: 255px; /* Fixed width for the header */
+}
+
+.contactForm {
     display: flex;
     justify-content: center;
     align-items: center;
-}
+    flex: 1; /* Grow to fill remaining vertical space */
+    height: 100%;
+  }
 
 .form {
     display: flex;

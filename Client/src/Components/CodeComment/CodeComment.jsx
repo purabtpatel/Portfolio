@@ -1,37 +1,61 @@
 import React, { useEffect, useState, useRef } from "react";
+import hljs from "highlight.js/lib/core";
+import javascript from "highlight.js/lib/languages/javascript";
+import "highlight.js/styles/atom-one-dark.css";
 import "./CodeComment.css";
 
+// Register only what you need
+hljs.registerLanguage("javascript", javascript);
+
 const CodeComment = ({ text }) => {
-    const [formattedLines, setFormattedLines] = useState([]);
+    const [highlightedLines, setHighlightedLines] = useState([]);
     const containerRef = useRef(null);
 
-    const splitTextIntoLines = (text, containerWidth) => {
-        const charPerRow = Math.max(10, Math.floor(containerWidth / 8)); // Adjust character count based on width
-        let lines = [];
-        let words = text.split(" ");
+    const splitHighlightedHTMLIntoLines = (highlightedHTML, containerWidth) => {
+        const charPerRow = Math.max(10, Math.floor(containerWidth / 8));
+
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = highlightedHTML;
+        const plainText = tempDiv.textContent || ""; // to measure actual line length
+
         let currentLine = "";
+        let raw = "";
+        let visibleChars = 0;
+        const output = [];
 
-        words.forEach(word => {
-            if ((currentLine + word).length > charPerRow) {
-                lines.push(currentLine.trim());
-                currentLine = word + " ";
-            } else {
-                currentLine += word + " ";
+        const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, null);
+        let node;
+
+        while ((node = walker.nextNode())) {
+            const nodeText = node.nodeType === Node.TEXT_NODE ? node.textContent : node.outerHTML;
+            const textContent = node.nodeType === Node.TEXT_NODE ? node.textContent : node.textContent;
+
+            for (let i = 0; i < textContent.length; i++) {
+                raw += nodeText[i] || "";
+                visibleChars++;
+
+                if (visibleChars >= charPerRow) {
+                    output.push(raw);
+                    raw = "";
+                    visibleChars = 0;
+                }
             }
-        });
-
-        if (currentLine.trim()) {
-            lines.push(currentLine.trim());
         }
 
-        return lines;
+        if (raw.trim()) {
+            output.push(raw);
+        }
+
+        return output;
     };
 
     useEffect(() => {
         const updateLines = () => {
             if (containerRef.current) {
                 const width = containerRef.current.clientWidth;
-                setFormattedLines(splitTextIntoLines(text, width - 100)); // 40px for padding
+                const highlighted = hljs.highlightAuto(text, ['javascript']).value;
+                const splitLines = splitHighlightedHTMLIntoLines(highlighted, width - 100);
+                setHighlightedLines(splitLines);
             }
         };
 
@@ -47,17 +71,17 @@ const CodeComment = ({ text }) => {
                 <span>/**</span>
             </div>
             <div className="code-content">
-                {formattedLines.map((line, index) => (
+                {highlightedLines.map((line, index) => (
                     <div className="code-grid-row" key={index + 2}>
                         <span className="code-line-number">{index + 2}</span>
                         <span className="comment-symbol">*</span>
-                        <span className="code-text">{line}</span>
+                        <span className="code-text" dangerouslySetInnerHTML={{ __html: line }} />
                     </div>
                 ))}
             </div>
             <div className="code-line">
-                <span className="code-line-number">{formattedLines.length + 2}</span>
-                <span>*/</span>
+                <span className="code-line-number">{highlightedLines.length + 2}</span>
+                <span style={{ marginLeft: "15px" }}>*/</span>
             </div>
         </div>
     );

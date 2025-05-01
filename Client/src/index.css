@@ -40,19 +40,19 @@
   --button-background: #1c2b3a;
 
   /* Appearance / Slate */
-  --slate-50: #f7faff;
-  --slate-100: #eff4fb;
-  --slate-200: #dbe2ec;
-  --slate-300: #b8c3d7;
-  --slate-400: #93a2ba;
-  --slate-500: #70809b;
-  --slate-600: #50607a;
-  --slate-700: #36455d;
-  --slate-750: #2b3c4d;
-  --slate-800: #1b293c;
-  --slate-900: #111a27;
-  --slate-925: #03121f;
-  --slate-950: #0a1019;
+  --slate-50:  #f6f9ff;
+  --slate-100: #ecf1fb;
+  --slate-200: #d7ddee;
+  --slate-300: #b3bfd9;
+  --slate-400: #8f9ebe;
+  --slate-500: #6d7f9f;
+  --slate-600: #4e607e;
+  --slate-700: #344663;
+  --slate-750: #293b53;
+  --slate-800: #1a293d;
+  --slate-900: #111a2b;
+  --slate-925: #031225;
+  --slate-950: #0a101e;
 
   /* Primary / Orange */
   --orange-50: #fff8f3;

@@ -1,0 +1,47 @@
+.code-snippet-container {
+    background-color: var(--default-medium);
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 500px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .code-snippet-line {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  
+
+  .code-line-content {
+    flex-grow: 1;
+    white-space: pre-wrap;
+    color: var(--bright-lines)
+    }
+
+  
+    .code-line-number {
+    color: var(--bright-lines);
+    }
+  
+  .code-snippet-container::-webkit-scrollbar {
+    width: 12px;
+    
+    background-color: var(--slate-950);
+    border-radius: 0px;
+    border-left: 1px solid var(--lines);
+    border-top: 1px solid var(--lines);
+  }
+  
+  .code-snippet-container::-webkit-scrollbar-track {
+    background: #111;
+  }
+  
+  .code-snippet-container::-webkit-scrollbar-thumb {
+    background-color: #444;
+    }

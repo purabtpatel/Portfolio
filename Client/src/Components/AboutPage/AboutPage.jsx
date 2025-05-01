@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTerminal, faUser, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import './AboutPage.css'; // Assuming you have a CSS file for styling
 import ProfessionalComponent from './ProfessionalComponent/ProfessionalComponent';
-import CodeShowcase from './CodeSnipet/CodeShowcase';
+import CodeShowcase from './CodeSnippet/CodeShowcase';
 import PersonalComponent from './PersonalComponent/PersonalComponent';
 import HobbiesComponent from './HobbiesComponent/HobbiesComponent';
 

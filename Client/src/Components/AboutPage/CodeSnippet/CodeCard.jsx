@@ -71,7 +71,11 @@ const CodeCard = ({ message, url, repo, timestamp, files }) => {
             <button
               key={file.filename}
               className={`file-button ${file.filename === selectedFile?.filename ? 'active' : ''}`}
-              onClick={() => setSelectedFile(file)}
+              onClick={() =>
+                setSelectedFile(prev =>
+                  prev?.filename === file.filename ? undefined : file
+                )
+              }
             >
               {shortenFilename(file.filename.split('/').pop(), 14)}
             </button>
@@ -97,9 +101,9 @@ const CodeCard = ({ message, url, repo, timestamp, files }) => {
         <div className="code-card-viewer">
           {
             files.length > 0 ? (selectedFile ? (<CodeSnippet key={selectedFile.raw_url} raw_url={selectedFile.raw_url} />
-              ) : (
-                <div className="code-card-placeholder">Select a file to view the code snippet</div>
-              )
+            ) : (
+              <div className="code-card-placeholder">Select a file to view the code snippet</div>
+            )
             ) : (
               <div className="code-card-placeholder">No signficant changes</div>
             )
@@ -117,19 +121,6 @@ const shortenFilename = (filename, maxLength) => {
   const end = filename.slice(-maxLength / 2);
   return `${start}...${end}`;
 };
-const shortenFilenameExtended = (filename) => {
-  const maxLength = 25;
-  if (!filename || maxLength <= 3) return filename; // Handle empty or invalid cases
-  if (filename.length <= maxLength) return filename;
 
-  const ellipsisLength = 3; // For "..."
-  const endLength = Math.floor(maxLength * 0.7); // Bias: 70% of available chars for end
-  const startLength = maxLength - endLength - ellipsisLength; // Remaining chars for start
-
-  const start = filename.slice(0, startLength);
-  const end = filename.slice(-endLength);
-
-  return `${start}...${end}`;
-};
 
 export default CodeCard;

@@ -3,6 +3,7 @@
 // ContactForm.jsx
 import { useState } from "react";
 import "./ContactPage.css"; // Assuming you have a CSS file for styling
+import AboutContactsComponent from "../AboutPage/AboutContactsComponent/AboutContactsComponent";
 
 function ContactPage() {
     const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -25,6 +26,10 @@ function ContactPage() {
 
     return (
         <div className="contactPage">
+            <div className="contactHeader">
+                <AboutContactsComponent />
+            </div>
+            
             <div className="contactForm">
                 <form onSubmit={handleSubmit} className="form">
                     <input
@@ -56,6 +61,8 @@ function ContactPage() {
                     {status && <p className="status">{status}</p>}
                 </form>
             </div>
+
+            
         </div>
     );
 };

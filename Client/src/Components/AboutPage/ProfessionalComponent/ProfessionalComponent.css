@@ -27,8 +27,8 @@
     gap: 7px;
     color: var(--accent-blue);
     font-family: 'Fira Code Retina', monospace;
-
 }
+
 .arrow-icon{
     min-width: 14px;
 }
@@ -55,8 +55,7 @@
     flex-direction: row;
     align-items: center;
     gap: 10px;
-    padding-left: 10px;
-    max-height: 30px;
+    max-height: 40px;
     border-bottom: 1px solid var(--lines);
 }
 
@@ -71,7 +70,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    height: 10px;
+    height: 20px;
     border-right: 1px solid var(--lines);
     width: 140px;
 }
