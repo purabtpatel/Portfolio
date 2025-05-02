@@ -1,70 +1,124 @@
-.contactPage {
-    display: flex;
-    flex-direction: row;
-    height: 100%; /* Make it take all vertical space */
+/* Container Layout */
+.contact-Page {
+  display: flex;
+  height: 100%;
 }
 
-.contactHeader{
-    border-right: 1px solid var(--lines);
-    width: 255px; /* Fixed width for the header */
+.contacts-section-Header {
+  border-right: 1px solid var(--lines);
+  width: 255px;
 }
 
-.contactForm {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1; /* Grow to fill remaining vertical space */
-    height: 100%;
-  }
+/* Main content */
+.contact-main-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  height: 20px;
+  width: 100%;
+  border-bottom: 1px solid var(--lines);
+}
+
+/* Body layout */
+.contact-body-content {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: stretch; /* changed from center */
+  overflow: hidden;
+}
+
+/* Form styling */
+.contact-Form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30vw;
+}
 
 .form {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    gap: 1rem;
-    width: 500px;
-    margin: 0 auto;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  width: 400px;
+}
+
+.input,
+.textArea {
+  background-color: var(--slate-950);
+  border: 1px solid var(--slate-800);
+  color: var(--slate-100);
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  resize: none;
+}
+
+.input:focus,
+.textArea:focus {
+  outline: 2px solid var(--orange-500);
+  border-color: var(--orange-500);
+  background-color: var(--slate-925);
+}
+
+.textArea {
+  min-height: 120px;
+}
+
+.form-button {
+  background-color: var(--orange-500);
+  color: var(--slate-50);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.form-button:hover {
+  background-color: var(--orange-600);
+}
+
+.status {
+  font-size: 0.875rem;
+  color: var(--success-400);
+}
+
+
+
+/* Scrollable content inside the code snippet container */
+.code-snippet-scroll-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30vw;
+  flex-direction: column;
+  overflow: auto;
+height: 100%;
   
-  .form .input,
-  .textArea {
-    background-color: var(--slate-950);
-    border: 1px solid var(--slate-800);
-    color: var(--slate-100);
-    padding: 0.75rem;
-    border-radius: 0.375rem;
-    font-size: 1rem;
-    resize: none;
-    
-  }
-  
-  .input:focus,
-  .textArea:focus {
-    outline: 2px solid var(--orange-500);
-    border-color: var(--orange-500);
-    background-color: var(--slate-925);
-  }
-  
-  .textArea {
-    min-height: 120px;
-  }
-  
-  .form-button {
-    background-color: var(--orange-500);
-    color: var(--slate-50);
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .button:hover {
-    background-color: var(--orange-600);
-  }
-  
-  .status {
-    font-size: 0.875rem;
-    color: var(--success-400);
-  }
+}
+
+/* Scrollbar styling applied to the correct container */
+.code-snippet-scroll-container::-webkit-scrollbar {
+  width: 12px;
+  background-color: var(--slate-950);
+}
+
+.code-snippet-scroll-container::-webkit-scrollbar-track {
+  background: var(--slate-950);
+  border-left: 1px solid var(--lines);
+}
+
+.code-snippet-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #444;
+}

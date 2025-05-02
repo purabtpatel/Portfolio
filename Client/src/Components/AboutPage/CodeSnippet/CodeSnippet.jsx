@@ -42,7 +42,8 @@ const CodeSnippet = ({ raw_url }) => {
     }
 
     return (
-        <div className="code-snippet-container">
+
+        <>
             {highlightedCode.map((line, index) => (
                 <div className="code-snippet-line" key={index}>
                     <span className="code-line-number">{index + 1}</span>
@@ -52,7 +53,8 @@ const CodeSnippet = ({ raw_url }) => {
                     />
                 </div>
             ))}
-        </div>
+
+        </>
     );
 };
 

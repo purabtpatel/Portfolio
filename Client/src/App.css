@@ -12,18 +12,15 @@
 .App {
   border-radius: 10px;
   background-color: var(--slate-900);
-
-  height: calc(100vh - 65px); /* Adjust height based on the 15px padding on each side */
+  height: calc(100vh - 65px); /* if html has 15px padding top/bottom */
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Prevent scrolling */
-  margin: 0 auto; /* Center the app */
-  border-color: var(--lines);
-  border-width: 1px;
-  border-style: solid;
+  overflow: hidden;
+  margin: 0 auto;
+  border: 1px solid var(--lines);
 }
-
 .main-content {
-  flex: 1; /* Pushes footer to bottom */
-  
+  flex: 1;
+  overflow: hidden;
+  min-height: 0; /* VERY important: allows flex child to shrink properly */
 }

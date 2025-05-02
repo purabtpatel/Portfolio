@@ -100,7 +100,11 @@ const CodeCard = ({ message, url, repo, timestamp, files }) => {
         {/* Code Snippet viewer on the right */}
         <div className="code-card-viewer">
           {
-            files.length > 0 ? (selectedFile ? (<CodeSnippet key={selectedFile.raw_url} raw_url={selectedFile.raw_url} />
+            files.length > 0 ? (selectedFile ? (
+              <div className='code-snippet-container'>
+                <CodeSnippet key={selectedFile.raw_url} raw_url={selectedFile.raw_url} />
+              </div>
+
             ) : (
               <div className="code-card-placeholder">Select a file to view the code snippet</div>
             )
