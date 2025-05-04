@@ -32,8 +32,11 @@ function ContactPage() {
             </div>
             <div className="contact-main-page">
                 <div className="contact-header">
-                    <span>professional-info</span>
+                    <div className="contact-header-title">
+                    <span style={{marginRight: "10px"}}
+                    >contacts</span>
                     <FontAwesomeIcon icon={faXmark} />
+                    </div>
                 </div>
 
                 <div className="contact-body-content" >

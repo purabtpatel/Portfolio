@@ -1,43 +1,65 @@
-/* Container Layout */
+
+
+/* Root of this component */
 .contact-Page {
   display: flex;
   height: 100%;
+  overflow: hidden; /* Prevent children from overflowing out */
 }
 
+/* Fixed left panel */
 .contacts-section-Header {
-  border-right: 1px solid var(--lines);
   width: 255px;
+  flex-shrink: 0;
+  height: 100%;
+  overflow-y: auto;
+  border-right: 1px solid var(--lines);
 }
 
-/* Main content */
+/* Right side with header and main content */
 .contact-main-page {
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0; /* IMPORTANT: needed for scroll to work inside flex */
 }
 
+/* Header at the top */
 .contact-header {
+  height: 40px;
+  flex-shrink: 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  height: 20px;
-  width: 100%;
+  padding: 0 10px;
   border-bottom: 1px solid var(--lines);
 }
 
-/* Body layout */
-.contact-body-content {
+.contact-header-title{
+  border-right: 1px solid var(--lines);
+  padding-right: 10px;
+  height: 100%;
   display: flex;
-  flex: 1;
+  align-items: center;
   justify-content: space-between;
-  align-items: stretch; /* changed from center */
+  color: var(--bright-lines);
+  width: 140px
+}
+
+/* Content below the header */
+.contact-body-content {
+  flex: 1;
+  display: flex;
+  min-height: 0; /* Allow proper scrolling */
   overflow: hidden;
 }
 
-/* Form styling */
+/* Left panel: form */
 .contact-Form {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  min-height: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,7 +73,6 @@
   width: 100%;
   width: 400px;
 }
-
 .input,
 .textArea {
   background-color: var(--slate-950);
@@ -94,21 +115,16 @@
   color: var(--success-400);
 }
 
-
-
-/* Scrollable content inside the code snippet container */
+/* Right panel: code snippet */
 .code-snippet-scroll-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 30vw;
-  flex-direction: column;
-  overflow: auto;
-height: 100%;
-  
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  border-left: 1px solid var(--lines);
+  min-height: 0;
 }
 
-/* Scrollbar styling applied to the correct container */
+
 .code-snippet-scroll-container::-webkit-scrollbar {
   width: 12px;
   background-color: var(--slate-950);
