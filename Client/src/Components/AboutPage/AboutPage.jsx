@@ -45,7 +45,7 @@ const AboutPage = () => {
               <HobbiesComponent />
             )}
         </div>
-        <div className='code-snippet'>
+        <div className='code-snippet-column'>
           <CodeShowcase />
         </div>
             

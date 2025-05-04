@@ -45,5 +45,9 @@
   .content-column {
     height: 100%;
     border-right: 1px solid var(--lines);
-    width: 45vw;
+    width: 35vw;
+  }
+  .code-snippet-column {
+    height: 100%;
+    width: 55vw;
   }

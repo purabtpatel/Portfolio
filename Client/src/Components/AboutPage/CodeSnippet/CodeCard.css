@@ -3,7 +3,6 @@
     border: 1px solid var(--lines);
     border-radius: 10px;
     padding: 16px;
-    margin-bottom: 20px;
     color: var(--secondary-white);
     font-family: 'Hack', monospace;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -139,7 +138,6 @@
     overflow-x: auto;
     overflow-y: auto;
     max-height: 300px;
-    margin-bottom: 12px;
     font-size: 12px;
     line-height: 1.5;
     white-space: pre;
