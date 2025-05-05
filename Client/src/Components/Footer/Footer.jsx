@@ -10,7 +10,7 @@ const Footer = () => {
             <ul className="footer-links">
                 
                 <li>
-                    <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.linkedin.com/in/purabpatel/" target="_blank" rel="noopener noreferrer">
                         <FontAwesomeIcon icon={faLinkedin} />
                     </a>
                 </li>

@@ -52,7 +52,7 @@
     align-items: center;
     gap: 10px;
     padding-left: 10px;
-    max-height: 40px;
+    height: 40px;
     border-bottom: 1px solid var(--lines);
     color: var(--secondary-white);
 }
@@ -68,7 +68,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    height: 20px;
+    min-height: 20px;
     border-right: 1px solid var(--lines);
     width: 140px;
 }
