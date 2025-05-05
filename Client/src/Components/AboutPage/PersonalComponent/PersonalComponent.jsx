@@ -9,9 +9,9 @@ const PersonalComponent = () => {
     const [sectionSelected, setSectionSelected] = useState("hobbies");
 
     const textContent = {
-        "hobbies": "In my free time, I enjoy playing music, experimenting with generative art, and exploring nature through hiking and travel...",
-        "values": "Integrity, curiosity, and empathy guide my personal and professional life. I strive to bring positivity and purpose to all I do...",
-        "goals": "I’m always working towards becoming a more thoughtful creator and a well-rounded person. Personal growth and continuous learning are central to my journey..."
+        "hobbies": "In my free time, I enjoy learning about financial markets and instruments, gaming with my friends, and spending time outdoors and exploring nature.",
+        "values": "Integrity, having curiosity in everything I do, strong moral compass. A few motos and life lessons I hold myself to: Growth is not linear. The harder you work, the luckier you get. Never criticize, condemn, or complain.",
+        "goals": "I believe that materialistic goals are strong impulsive drivers but also equally as shallow. So I use short term materialistic goals to make progress towards more meaningful goals like becoming a better person, spiritually, physically, and emotionally."
     };
 
     return (

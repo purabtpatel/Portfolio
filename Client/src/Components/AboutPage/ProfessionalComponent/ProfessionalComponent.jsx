@@ -9,9 +9,9 @@ const ProfessionalComponent = () => {
     const [sectionSelected, setSectionSelected] = useState("experience");
 
     const textContent = {
-        "experience": "Over the past 5 years, I have worked on multiple projects involving front-end and back-end technologies. I specialize in React, JavaScript, and UI/UX design...",
-        "tech-skills": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \n \n Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. a front-end developer, I have experience in JavaScript, React, HTML, CSS, and modern frameworks. I focus on performance, accessibility, and creating seamless user experiences...",
-        "soft-skills": "I bring strong problem-solving skills, teamwork, and communication to every project. I am adaptable, detail-oriented, and always eager to learn and improve..."
+        "experience": "Over the past two years, I have worked at NJ Courts as a junior developer supporting and upgrading internal applications used by staff at the courts. I have been involved in developing for both backend and frontend using Java and JSF. \nI also have lots of fun using JavaScript and libraries like React, and have built numerous  projects, including this portfolio site, using JavaScript. My go-to cloud provider is AWS, and I have a certified cloud practitioner certification with plans of expanding my skills with other AWS certifications. ",
+        "tech-skills": "I am proficient in JavaScript, React, Node.js, Express, Java EE, JSF. I have experience administering and/or configuring AWS resources like EC2, S3, IAM, SES, Route 53. I also have a strong understanding of RESTful APIs and web services.",
+        "soft-skills": "I bring strong problem-solving skills, teamwork, and communication to every project. I am adaptable, persistent, and always eager to learn and improve."
     };
 
     return (
