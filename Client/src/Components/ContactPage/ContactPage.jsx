@@ -16,13 +16,37 @@ function ContactPage() {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const res = await fetch("/api/contact", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
-        });
-        const data = await res.json();
-        setStatus(data.message);
+        setStatus("Sending...");
+
+        const apiUrl = "http://localhost:5000/api/contact";
+
+        try {
+
+            const res = await fetch(apiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+
+            if (!res.ok) {
+                let errorMsg = `HTTP error! status: ${res.status}`;
+                try {
+                    const errorData = await res.json();
+                    errorMsg = errorData.message || errorMsg;
+                } catch (jsonError) {
+                    errorMsg = `${errorMsg} - ${res.statusText}`;
+                }
+                throw new Error(errorMsg);
+            }
+
+            const data = await res.json();
+            setStatus(data.message);
+            setForm({ name: "", email: "", message: "" });
+
+        } catch (error) {
+            console.error("Failed to send message:", error);
+            setStatus(`Error: ${error.message || 'Could not connect to server'}`);
+        }
     };
 
     return (
@@ -33,9 +57,9 @@ function ContactPage() {
             <div className="contact-main-page">
                 <div className="contact-header">
                     <div className="contact-header-title">
-                    <span style={{marginRight: "10px"}}
-                    >contacts</span>
-                    <FontAwesomeIcon icon={faXmark} />
+                        <span style={{ marginRight: "10px" }}
+                        >send me a message</span>
+                        <FontAwesomeIcon icon={faXmark} />
                     </div>
                 </div>
 
