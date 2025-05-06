@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import SnakeGame from '../Games/SnakeGame';
 import InvasionGame from '../Games/InvasionGame';
+import { faCaretUp, faCaretDown, faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import './HomePage.css';
 
 const HomePage = () => {
     const [score, setScore] = useState(0);
 
     return (
+
+
         <div className="home-page">
             <div className="home-page-content">
                 <div className="home-page-header">
@@ -29,14 +34,51 @@ const HomePage = () => {
                     </div>
                 </div>
             </div>
-            <div className="game-card">
-                <p>Score: {score}</p>
-                <InvasionGame
-                    score={score}
-                    setScore={setScore}
-                />
+            <div className="relative-container" style={{ position: 'relative' }}>
+                <div class="css-blurry-gradient-blue"></div>
+                <div class="css-blurry-gradient-green"></div>
+
+                <div className="game-card" style={{ position: 'relative', zIndex: 2 }}>
+                    <div className="screw top-left">X</div>
+                    <div className="screw top-right">X</div>
+                    <div className="screw bottom-left">X</div>
+                    <div className="screw bottom-right">X</div>
+
+                    <SnakeGame setScore={setScore}
+                        score={score} />
+
+                    <div className='column-two'>
+                        <div className="how-to-play-panel">
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                <div className="how-to-play-comments">// use your arrow</div>
+                                <div className="how-to-play-comments">// keys to play</div>
+                            </div>
+                            <div className="arrow-keys">
+                                <div className="arrow-row">
+                                    <button className="arrow-button">
+                                        <FontAwesomeIcon icon={faCaretUp} />
+                                    </button>
+                                </div>
+                                <div className="arrow-row">
+                                    <button className="arrow-button">
+                                        <FontAwesomeIcon icon={faCaretLeft} />
+                                    </button>
+                                    <button className="arrow-button">
+                                        <FontAwesomeIcon icon={faCaretDown} />
+                                    </button>
+                                    <button className="arrow-button">
+                                        <FontAwesomeIcon icon={faCaretRight} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>Score: {score}</p>
+                    </div>
+                </div>
             </div>
         </div>
+
     );
 };
 

@@ -1,6 +1,7 @@
 .navbar {
     border-bottom: 1px solid var(--lines);
     height: 50px;
+    
 }
 
 .navbar-links {

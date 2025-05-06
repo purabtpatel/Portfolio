@@ -14,7 +14,6 @@
   }
   
   .snake-board-wrapper {
-    padding: 10px;
     border-radius: 12px;
     display: inline-block;
     position: relative;
@@ -51,20 +50,20 @@
   }
   
   .snake-button.start {
-    background-color: var(--accent-orange);
+    background-color: var(--orange-400);
     color: black;
   }
   
   .snake-button.start:hover {
-    background-color: var(--accent-orange-light);
+    background-color: var(--orange-300);
   }
   
   .snake-button.restart {
-    background-color: var(--accent-orange);
+    background-color: var(--orange-400);
     color: black;
   }
   
   .snake-button.restart:hover {
-    background-color: var(--accent-orange-light);
+    background-color: var(--orange-300);
   }
   
