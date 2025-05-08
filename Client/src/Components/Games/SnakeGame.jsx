@@ -3,8 +3,8 @@ import './SnakeGame.css';
 
 const CELL_SIZE = 10;
 const BOARD_SIZE = 40;
-const TICK_RATE = 75;
-
+const TICK_RATE = 55;
+const CANVAS_SIZE = BOARD_SIZE * CELL_SIZE;
 
 function generateInitialSnake() {
     const startX = 20;
@@ -22,7 +22,6 @@ function generateInitialSnake() {
     return snake;
 }
 
-
 function generateFood() {
     return {
         x: Math.floor(Math.random() * BOARD_SIZE),
@@ -30,18 +29,21 @@ function generateFood() {
     };
 }
 
-
-const SnakeGame = ({ score, setScore }) => {
+const SnakeGame = ({ score, setScore, highscores, setHighscores, setDisplayInstructions }) => {
     const canvasRef = useRef(null);
     const [snake, setSnake] = useState(generateInitialSnake());
-    const [food, setFood] = useState(generateFood);
+    const [food, setFood] = useState(generateFood());
     const [direction, setDirection] = useState({ x: 0, y: -1 });
     const [isRunning, setIsRunning] = useState(false);
     const [isGameOver, setIsGameOver] = useState(false);
+    const [playerName, setPlayerName] = useState('');
+    const [showNameInput, setShowNameInput] = useState(false);
+    const [error, setError] = useState(null);
 
     const latestDirection = useRef(direction);
     const latestFood = useRef(food);
     const latestSnake = useRef(snake);
+    const pendingDirection = useRef(null);
 
     useEffect(() => {
         latestDirection.current = direction;
@@ -55,113 +57,106 @@ const SnakeGame = ({ score, setScore }) => {
         latestSnake.current = snake;
     }, [snake]);
 
+    // Fetch highscores on mount
+    useEffect(() => {
+        fetchHighscores();
+    }, []);
+
+    const fetchHighscores = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/highscores');
+            if (!response.ok) throw new Error('Failed to fetch highscores');
+            const data = await response.json();
+            setHighscores(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error('Error fetching highscores:', error);
+            setError('Failed to load leaderboard');
+            setHighscores([]);
+        }
+    };
+
+    const submitHighscore = async () => {
+        if (!playerName.trim() || score <= 0) return;
+        
+        try {
+            const response = await fetch('http://localhost:5000/api/highscores', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: playerName, score }),
+            });
+            if (!response.ok) throw new Error('Failed to submit highscore');
+            const data = await response.json();
+            setHighscores(Array.isArray(data) ? data : []);
+            setShowNameInput(false);
+            setPlayerName('');
+            setError(null);
+        } catch (error) {
+            console.error('Error submitting highscore:', error);
+            setError('Failed to submit score');
+        }
+    };
 
     const handleStart = () => {
         const initialSnake = generateInitialSnake();
         const initialFood = generateFood();
         const initialDirection = { x: 0, y: -1 };
 
+        setDisplayInstructions(false);
         setSnake(initialSnake);
         setFood(initialFood);
         setDirection(initialDirection);
         latestSnake.current = initialSnake;
         latestFood.current = initialFood;
         latestDirection.current = initialDirection;
+        pendingDirection.current = null;
 
         setScore(0);
         setIsRunning(true);
         setIsGameOver(false);
+        setShowNameInput(false);
+        setError(null);
     };
 
+    // Handle keyboard input with debounced direction changes
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (!isRunning || isGameOver) return;
 
             const currentDirection = latestDirection.current;
 
-            if (e.key === "ArrowUp" && currentDirection.y !== 1) setDirection({ x: 0, y: -1 });
-            else if (e.key === "ArrowDown" && currentDirection.y !== -1) setDirection({ x: 0, y: 1 });
-            else if (e.key === "ArrowLeft" && currentDirection.x !== 1) setDirection({ x: -1, y: 0 });
-            else if (e.key === "ArrowRight" && currentDirection.x !== -1) setDirection({ x: 1, y: 0 });
+            if (e.key === "ArrowUp" && currentDirection.y !== 1) {
+                pendingDirection.current = { x: 0, y: -1 };
+            } else if (e.key === "ArrowDown" && currentDirection.y !== -1) {
+                pendingDirection.current = { x: 0, y: 1 };
+            } else if (e.key === "ArrowLeft" && currentDirection.x !== 1) {
+                pendingDirection.current = { x: -1, y: 0 };
+            } else if (e.key === "ArrowRight" && currentDirection.x !== -1) {
+                pendingDirection.current = { x: 1, y: 0 };
+            }
         };
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [isRunning, isGameOver]);
 
-    const runGameTick = useCallback(() => {
-        const currentSnake = latestSnake.current;
-        const currentDirection = latestDirection.current;
-        const currentFood = latestFood.current;
-
-        const newHead = {
-            x: currentSnake[0].x + currentDirection.x,
-            y: currentSnake[0].y + currentDirection.y,
-        };
-
-        if (
-            newHead.x < 0 ||
-            newHead.x >= BOARD_SIZE ||
-            newHead.y < 0 ||
-            newHead.y >= BOARD_SIZE
-        ) {
-            setIsRunning(false);
-            setIsGameOver(true);
-            return;
-        }
-
-        const willCollide = currentSnake.slice(1).some(
-            (segment) => segment.x === newHead.x && segment.y === newHead.y
-        );
-        if (willCollide) {
-            setIsRunning(false);
-            setIsGameOver(true);
-            return;
-        }
-
-
-        let newSnake = [...currentSnake];
-        let ateFood = false;
-
-        if (newHead.x === currentFood.x && newHead.y === currentFood.y) {
-            ateFood = true;
-            newSnake.unshift(newHead);
-            setFood(generateFood());
-            setScore((prev) => prev + 1);
-
-        } else {
-            newSnake.unshift(newHead);
-            newSnake.pop();
-        }
-
-        setSnake(newSnake);
-
-    }, []);
-
+    // Pre-draw snake and food on initial load
     useEffect(() => {
-        if (!isRunning || isGameOver) {
-            return;
-        }
+        if (!canvasRef.current || isRunning || isGameOver) return;
 
-        const intervalId = setInterval(runGameTick, TICK_RATE);
+        const ctx = canvasRef.current.getContext("2d");
+        ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-        return () => clearInterval(intervalId);
-    }, [isRunning, isGameOver, runGameTick]);
-
-    useEffect(() => {
-        if (!canvasRef.current) return;
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
-
+        // Draw food with shadow
         ctx.save();
         ctx.shadowColor = `rgba(67, 217, 173)`;
         ctx.shadowBlur = 20;
         ctx.fillStyle = `rgba(67, 217, 173)`;
         ctx.beginPath();
         ctx.arc(
-            food.x * CELL_SIZE + CELL_SIZE / 2,
-            food.y * CELL_SIZE + CELL_SIZE / 2,
+            latestFood.current.x * CELL_SIZE + CELL_SIZE / 2,
+            latestFood.current.y * CELL_SIZE + CELL_SIZE / 2,
             CELL_SIZE * 0.4,
             0,
             Math.PI * 2
@@ -169,40 +164,126 @@ const SnakeGame = ({ score, setScore }) => {
         ctx.fill();
         ctx.restore();
 
-        snake.forEach((segment, index) => {
-            const t = index / snake.length;
+        // Draw snake without shadow
+        latestSnake.current.forEach((segment, index) => {
+            const t = index / latestSnake.current.length;
             const minAlpha = 0.1;
             const alpha = 1 - t + minAlpha;
             ctx.fillStyle = `rgba(67, 217, 173, ${alpha})`;
             ctx.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         });
+    }, [snake, food, isRunning, isGameOver]);
 
+    // Game loop with requestAnimationFrame
+    useEffect(() => {
+        if (!isRunning || isGameOver || !canvasRef.current) return;
 
-        if (isGameOver) {
-            ctx.fillStyle = "rgba(0, 0, 0, 0)";
-            ctx.fillRect(0, 0, BOARD_SIZE * CELL_SIZE, BOARD_SIZE * CELL_SIZE);
+        const ctx = canvasRef.current.getContext("2d");
+        let lastTick = performance.now();
+        let animationFrameId;
 
+        const gameLoop = (now) => {
+            if (now - lastTick >= TICK_RATE) {
+                const currentSnake = latestSnake.current;
+                const currentDirection = pendingDirection.current || latestDirection.current;
+                pendingDirection.current = null;
+
+                const newHead = {
+                    x: currentSnake[0].x + currentDirection.x,
+                    y: currentSnake[0].y + currentDirection.y,
+                };
+
+                // Collision checks with optimized Set-based collision detection
+                const snakeSet = new Set(currentSnake.slice(1).map(s => `${s.x},${s.y}`));
+                if (
+                    newHead.x < 0 ||
+                    newHead.x >= BOARD_SIZE ||
+                    newHead.y < 0 ||
+                    newHead.y >= BOARD_SIZE ||
+                    snakeSet.has(`${newHead.x},${newHead.y}`)
+                ) {
+                    setIsRunning(false);
+                    setIsGameOver(true);
+                    if (score > 0 && (highscores.length < 5 || score > Math.min(...highscores.map(h => h.score)))) {
+                        setShowNameInput(true);
+                    }
+                    return;
+                }
+
+                let newSnake = [...currentSnake];
+                let ateFood = false;
+
+                if (newHead.x === latestFood.current.x && newHead.y === latestFood.current.y) {
+                    ateFood = true;
+                    newSnake.unshift(newHead);
+                    latestFood.current = generateFood();
+                    setFood(latestFood.current);
+                    setScore((prev) => prev + 1);
+                } else {
+                    newSnake.unshift(newHead);
+                    newSnake.pop();
+                }
+
+                latestSnake.current = newSnake;
+                setSnake(newSnake);
+                latestDirection.current = currentDirection;
+                lastTick = now;
+            }
+
+            // Render
+            ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+            // Draw food with shadow
+            ctx.save();
+            ctx.shadowColor = `rgba(67, 217, 173)`;
+            ctx.shadowBlur = 20;
             ctx.fillStyle = `rgba(67, 217, 173)`;
-            ctx.font = "bold 30px Arial";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
+            ctx.beginPath();
+            ctx.arc(
+                latestFood.current.x * CELL_SIZE + CELL_SIZE / 2,
+                latestFood.current.y * CELL_SIZE + CELL_SIZE / 2,
+                CELL_SIZE * 0.4,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+            ctx.restore();
 
-            const centerX = (BOARD_SIZE * CELL_SIZE) / 2;
-            const centerY = (BOARD_SIZE * CELL_SIZE) / 2;
+            // Draw snake without shadow
+            latestSnake.current.forEach((segment, index) => {
+                const t = index / latestSnake.current.length;
+                const minAlpha = 0.1;
+                const alpha = 1 - t + minAlpha;
+                ctx.fillStyle = `rgba(67, 217, 173, ${alpha})`;
+                ctx.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            });
 
-            ctx.fillText("Game Over!", centerX, centerY - 20);
-        }
-    }, [snake, food, isGameOver, score]);
+            // Draw game over screen
+            if (isGameOver) {
+                ctx.fillStyle = `rgba(67, 217, 173)`;
+                ctx.font = "bold 30px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("Game Over!", CANVAS_SIZE / 2, CANVAS_SIZE / 2 - 20);
+            }
+
+            if (isRunning && !isGameOver) {
+                animationFrameId = requestAnimationFrame(gameLoop);
+            }
+        };
+
+        animationFrameId = requestAnimationFrame(gameLoop);
+        return () => cancelAnimationFrame(animationFrameId);
+    }, [isRunning, isGameOver, score, highscores, setScore, setDisplayInstructions]);
 
     return (
         <div>
-
-
+            {error && <div className="error-message">{error}</div>}
             <div className="snake-board-wrapper">
                 <canvas
                     ref={canvasRef}
-                    width={BOARD_SIZE * CELL_SIZE}
-                    height={BOARD_SIZE * CELL_SIZE}
+                    width={CANVAS_SIZE}
+                    height={CANVAS_SIZE}
                     className="snake-canvas"
                 />
 
@@ -212,16 +293,34 @@ const SnakeGame = ({ score, setScore }) => {
                             Start Game
                         </button>
                     )}
-                    {isGameOver && (
+                    {isGameOver && !showNameInput && (
                         <button onClick={handleStart} className="snake-button restart">
                             Restart Game
                         </button>
                     )}
+                    {showNameInput && (
+                        <div className="highscore-input">
+                            <h1>New Highscore!</h1>
+                            <input
+                                type="text"
+                                value={playerName}
+                                onChange={(e) => setPlayerName(e.target.value)}
+                                placeholder="Enter your name"
+                                maxLength={8}
+                            />
+                            <button
+                                onClick={submitHighscore}
+                                disabled={!playerName.trim()}
+                                className="snake-button submit"
+                            >
+                                Submit Score
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
-
         </div>
     );
-}
+};
 
 export default SnakeGame;

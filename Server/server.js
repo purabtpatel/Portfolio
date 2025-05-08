@@ -1,23 +1,34 @@
 require('dotenv').config();
 const NodeCache = require('node-cache');
-const cache = new NodeCache({ stdTTL: 1200 }); 
+const cache = new NodeCache({ stdTTL: 1200 });
 const nodemailer = require('nodemailer');
 const rateLimit = require('express-rate-limit');
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
-const GITHUB_USERNAME = 'purabtpatel'; 
-
+const GITHUB_USERNAME = 'purabtpatel';
 const WHITELISTED_IP = process.env.WHITELISTED_IP;
+const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
+
+async function initializeHighscores() {
+  try {
+    await fs.access(HIGHSCORES_FILE);
+  } catch {
+    await fs.writeFile(HIGHSCORES_FILE, JSON.stringify([]));
+  }
+}
+
+initializeHighscores();
 
 const contactLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, 
-  max: 5, 
+  windowMs: 60 * 60 * 1000,
+  max: 5,
   skip: (req, res) => {
     return req.ip === WHITELISTED_IP;
   },
@@ -26,12 +37,44 @@ const contactLimiter = rateLimit({
   },
 });
 
+app.get('/api/highscores', async (req, res) => {
+  try {
+    const data = await fs.readFile(HIGHSCORES_FILE);
+    const highscores = JSON.parse(data);
+    res.json(highscores.sort((a, b) => b.score - a.score).slice(0, 5));
+  } catch (error) {
+    console.error('Error reading highscores:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/highscores', async (req, res) => {
+  try {
+    const { name, score } = req.body;
+    if (!name || typeof score !== 'number' || score <= 0 || score > 1600) {
+      return res.status(400).json({ error: 'Valid name and positive score are required' });
+    }
+
+    const data = await fs.readFile(HIGHSCORES_FILE);
+    let highscores = JSON.parse(data);
+
+    highscores.push({ name, score, date: new Date().toISOString() });
+    highscores = highscores.sort((a, b) => b.score - a.score).slice(0, 5);
+
+    await fs.writeFile(HIGHSCORES_FILE, JSON.stringify(highscores, null, 2));
+    res.json(highscores);
+  } catch (error) {
+    console.error('Error saving highscore:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.get('/api/commits', async (req, res) => {
   const cacheKey = 'latestCommits';
   const cachedData = cache.get(cacheKey);
 
   if (cachedData) {
-    return res.json(cachedData); 
+    return res.json(cachedData);
   }
 
   try {
@@ -57,7 +100,7 @@ app.get('/api/commits', async (req, res) => {
         repo: event.repo.name,
         timestamp: event.created_at
       })))
-      .slice(0, 4);
+      .slice(0, 6);
 
     const commitContents = await Promise.all(
       commits.map(async commit => {
@@ -85,14 +128,12 @@ app.get('/api/commits', async (req, res) => {
     );
 
     cache.set(cacheKey, commitContents);
-
     res.json(commitContents);
   } catch (error) {
     console.error(error);
     res.status(500).send('Error fetching commits');
   }
 });
-
 
 app.get('/api/snippet', async (req, res) => {
   const { url } = req.query;
@@ -122,9 +163,7 @@ app.get('/api/snippet', async (req, res) => {
     }
 
     const code = await response.text();
-
     cache.set(cacheKey, code);
-
     res.set('Content-Type', 'text/plain');
     res.send(code);
   } catch (error) {
@@ -167,8 +206,6 @@ app.post('/api/contact', contactLimiter, express.json(), async (req, res) => {
     res.status(500).json({ message: 'Failed to send message' });
   }
 });
-
-
 
 app.listen(5000, () => {
   console.log('Server running on http://localhost:5000');
