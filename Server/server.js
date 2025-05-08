@@ -1,13 +1,18 @@
-require('dotenv').config();
-const NodeCache = require('node-cache');
-const cache = new NodeCache({ stdTTL: 1200 });
-const nodemailer = require('nodemailer');
-const rateLimit = require('express-rate-limit');
-const express = require('express');
-const cors = require('cors');
-const fs = require('fs').promises;
-const path = require('path');
+import 'dotenv/config';
+import NodeCache from 'node-cache';
+import nodemailer from 'nodemailer';
+import rateLimit from 'express-rate-limit';
+import express from 'express';
+import cors from 'cors';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { Filter } from 'bad-words';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const cache = new NodeCache({ stdTTL: 1200 });
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -15,6 +20,9 @@ app.use(express.json());
 const GITHUB_USERNAME = 'purabtpatel';
 const WHITELISTED_IP = process.env.WHITELISTED_IP;
 const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
+
+const profanityFilter = new Filter();
+profanityFilter.addWords('wanker', 'twat'); // Ensure these words are caught
 
 const validateEmail = email =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -25,6 +33,15 @@ const validateName = name =>
 const containsLink = str =>
   /https?:\/\/|www\./i.test(str);
 
+// Server-side profanity check
+const containsProfanity = (str) => {
+  try {
+    return profanityFilter.isProfane(str);
+  } catch (error) {
+    console.error('Profanity filter error:', error);
+    return false;
+  }
+};
 
 async function initializeHighscores() {
   try {
@@ -65,10 +82,19 @@ app.post('/api/highscores', async (req, res) => {
       return res.status(400).json({ error: 'Valid name and positive score are required' });
     }
 
+    const trimmedName = name.trim();
+    if (!validateName(trimmedName)) {
+      return res.status(400).json({ error: 'Invalid name format' });
+    }
+
+    if (containsProfanity(trimmedName)) {
+      return res.status(400).json({ error: 'Inappropriate name detected. Please choose a different name.' });
+    }
+
     const data = await fs.readFile(HIGHSCORES_FILE);
     let highscores = JSON.parse(data);
 
-    highscores.push({ name, score, date: new Date().toISOString() });
+    highscores.push({ name: trimmedName, score, date: new Date().toISOString() });
     highscores = highscores.sort((a, b) => b.score - a.score).slice(0, 5);
 
     await fs.writeFile(HIGHSCORES_FILE, JSON.stringify(highscores, null, 2));
@@ -243,7 +269,6 @@ app.post('/api/contact', contactLimiter, express.json(), async (req, res) => {
     res.status(500).json({ message: 'Failed to send message' });
   }
 });
-
 
 app.listen(5000, () => {
   console.log('Server running on http://localhost:5000');

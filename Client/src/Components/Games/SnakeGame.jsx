@@ -6,6 +6,9 @@ const BOARD_SIZE = 40;
 const TICK_RATE = 55;
 const CANVAS_SIZE = BOARD_SIZE * CELL_SIZE;
 
+
+const PROFANITY_REGEX = /\b(fuck|shit|damn|ass|bitch|cunt|dick|piss|cock|bastard)\b/i;
+
 function generateInitialSnake() {
     const startX = 20;
     const startY = 20;
@@ -76,17 +79,32 @@ const SnakeGame = ({ score, setScore, highscores, setHighscores, setDisplayInstr
     };
 
     const submitHighscore = async () => {
-        if (!playerName.trim() || score <= 0) return;
-        
+        if (!playerName.trim() || score <= 0) {
+            setError('Please enter a valid name');
+            return;
+        }
+
+        // Client-side profanity check
+        if (PROFANITY_REGEX.test(playerName.trim())) {
+            setError('Inappropriate name detected. Please choose a different name.');
+            setPlayerName('');
+            return;
+        }
+
         try {
             const response = await fetch('http://localhost:5000/api/highscores', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name: playerName, score }),
+                body: JSON.stringify({ name: playerName.trim(), score }),
             });
-            if (!response.ok) throw new Error('Failed to submit highscore');
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to submit highscore');
+            }
+
             const data = await response.json();
             setHighscores(Array.isArray(data) ? data : []);
             setShowNameInput(false);
@@ -94,7 +112,8 @@ const SnakeGame = ({ score, setScore, highscores, setHighscores, setDisplayInstr
             setError(null);
         } catch (error) {
             console.error('Error submitting highscore:', error);
-            setError('Failed to submit score');
+            setError(error.message || 'Failed to submit score');
+            // Keep showNameInput true to allow retry
         }
     };
 
@@ -278,7 +297,7 @@ const SnakeGame = ({ score, setScore, highscores, setHighscores, setDisplayInstr
 
     return (
         <div>
-            {error && <div className="error-message">{error}</div>}
+            
             <div className="snake-board-wrapper">
                 <canvas
                     ref={canvasRef}
@@ -301,6 +320,7 @@ const SnakeGame = ({ score, setScore, highscores, setHighscores, setDisplayInstr
                     {showNameInput && (
                         <div className="highscore-input">
                             <h1>New Highscore!</h1>
+                            {error && <div className="error-message">{error}</div>}
                             <input
                                 type="text"
                                 value={playerName}
