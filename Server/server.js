@@ -16,6 +16,16 @@ const GITHUB_USERNAME = 'purabtpatel';
 const WHITELISTED_IP = process.env.WHITELISTED_IP;
 const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
 
+const validateEmail = email =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+const validateName = name =>
+  /^[a-zA-Z\s.'-]{2,50}$/.test(name.trim());
+
+const containsLink = str =>
+  /https?:\/\/|www\./i.test(str);
+
+
 async function initializeHighscores() {
   try {
     await fs.access(HIGHSCORES_FILE);
@@ -142,6 +152,13 @@ app.get('/api/snippet', async (req, res) => {
     return res.status(400).json({ error: 'Missing raw_url query param' });
   }
 
+  const allowedPrefix = 'https://raw.githubusercontent.com/purabtpatel/';
+
+  if (!url.startsWith(allowedPrefix)) {
+    console.warn(`Blocked snippet request for invalid URL: ${url}`);
+    return res.status(403).json({ error: 'Access to this URL is not allowed' });
+  }
+
   const cacheKey = `snippet:${url}`;
   const cachedSnippet = cache.get(cacheKey);
 
@@ -179,6 +196,26 @@ app.post('/api/contact', contactLimiter, express.json(), async (req, res) => {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
+  const trimmedName = name.trim();
+  const trimmedEmail = email.trim();
+  const trimmedMessage = message.trim();
+
+  if (!validateName(trimmedName)) {
+    return res.status(400).json({ message: 'Invalid name format' });
+  }
+
+  if (!validateEmail(trimmedEmail)) {
+    return res.status(400).json({ message: 'Invalid email format' });
+  }
+
+  if (trimmedMessage.length < 10 || trimmedMessage.length > 1000) {
+    return res.status(400).json({ message: 'Message must be between 10 and 1000 characters' });
+  }
+
+  if (containsLink(trimmedMessage)) {
+    return res.status(400).json({ message: 'Links are not allowed in the message' });
+  }
+
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -191,12 +228,12 @@ app.post('/api/contact', contactLimiter, express.json(), async (req, res) => {
     });
 
     const mailOptions = {
-      from: `"${name}" <${process.env.EMAIL_FROM}>`,
+      from: `"${trimmedName}" <${process.env.EMAIL_FROM}>`,
       to: process.env.EMAIL_TO,
-      subject: `New message from ${name}`,
-      replyTo: email,
-      text: message,
-      html: `<p><strong>From:</strong> ${name} (${email})</p><p><strong>Message:</strong><br>${message}</p>`,
+      subject: `New message from ${trimmedName}`,
+      replyTo: trimmedEmail,
+      text: trimmedMessage,
+      html: `<p><strong>From:</strong> ${trimmedName} (${trimmedEmail})</p><p><strong>Message:</strong><br>${trimmedMessage}</p>`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -206,6 +243,7 @@ app.post('/api/contact', contactLimiter, express.json(), async (req, res) => {
     res.status(500).json({ message: 'Failed to send message' });
   }
 });
+
 
 app.listen(5000, () => {
   console.log('Server running on http://localhost:5000');
