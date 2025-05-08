@@ -3,7 +3,7 @@ import './SnakeGame.css';
 
 const CELL_SIZE = 10;
 const BOARD_SIZE = 40;
-const TICK_RATE = 55;
+const TICK_RATE = 60;
 const CANVAS_SIZE = BOARD_SIZE * CELL_SIZE;
 
 

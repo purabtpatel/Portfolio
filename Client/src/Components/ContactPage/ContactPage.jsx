@@ -1,6 +1,6 @@
-// ContactForm.jsx
+
 import { useState } from "react";
-import "./ContactPage.css"; // Assuming you have a CSS file for styling
+import "./ContactPage.css"; 
 import AboutContactsComponent from "../AboutPage/AboutContactsComponent/AboutContactsComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
