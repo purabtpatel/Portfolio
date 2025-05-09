@@ -60,4 +60,17 @@ jobs:
             cd ~/app/Server
             npm install
 
+            # Restart Express backend (using pm2 for process management)
+            if ! command -v pm2 &> /dev/null; then
+              sudo npm install -g pm2
+            fi
+            pm2 start server.js --name backend --cwd ~/app/Server --update-env || pm2 restart backend
+
+            # Deploy frontend build to NGINX
+            sudo rm -rf /var/www/html/*
+            sudo cp -r ~/app/Client/dist/* /var/www/html/
+
+            # Start NGINX
+            sudo systemctl enable nginx
+            sudo systemctl restart nginx
             
