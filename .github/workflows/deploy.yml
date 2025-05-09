@@ -78,11 +78,19 @@ jobs:
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
-            # Copy Nginx config to sites-available
             sudo bash -c 'cat > /etc/nginx/sites-available/purabpatel.com' << 'EOF'
             server {
                 listen 80;
                 server_name purabpatel.com www.purabpatel.com;
+                return 301 https://$host$request_uri; # Redirect HTTP to HTTPS
+            }
+
+            server {
+                listen 443 ssl;
+                server_name purabpatel.com www.purabpatel.com;
+
+                ssl_certificate /etc/letsencrypt/live/purabpatel.com/fullchain.pem;
+                ssl_certificate_key /etc/letsencrypt/live/purabpatel.com/privkey.pem;
 
                 location /api/ {
                     proxy_pass http://localhost:5000;
@@ -97,7 +105,7 @@ jobs:
             }
             EOF
 
-            # Enable the configuration by creating a symlink
+            # Enable the configuration
             sudo ln -sf /etc/nginx/sites-available/purabpatel.com /etc/nginx/sites-enabled/
 
             # Remove default Nginx configuration
