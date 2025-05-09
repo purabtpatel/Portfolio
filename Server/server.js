@@ -54,7 +54,7 @@ initializeHighscores();
 
 const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5,
+  max: 50,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many messages sent. Please try again later.' });
   },

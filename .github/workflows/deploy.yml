@@ -40,17 +40,19 @@ jobs:
             mkdir -p ~/app/Client ~/app/Server
 
             # Write Client .env
-            echo "VITE_API_URL=https://purabpatel.com/api/" > ~/app/Client/.env           
+            echo "VITE_API_URL=https://purabpatel.com/api/" >> ~/app/Client/.env           
             
             # Write Server .env
-            echo "PORT=${{ secrets.PORT }}" > ~/app/Server/.env
-            echo "GHUB_TOKEN=${{ secrets.GHUB_TOKEN }}" > ~/app/Server/.env
-            echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" > ~/app/Server/.env
-            echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" > ~/app/Server/.env
-            echo "SMTP_USER=${{ secrets.SMTP_USER }}" > ~/app/Server/.env
-            echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" > ~/app/Server/.env
-            echo "EMAIL_FROM=${{ secrets.EMAIL_FROM }}" > ~/app/Server/.env
-            echo "EMAIL_TO=${{ secrets.EMAIL_TO }}" > ~/app/Server/.env
+            sudo bash -c 'cat > ~/app/Server/.env' << 'EOF'
+            PORT=${{ secrets.PORT }}
+            GHUB_TOKEN=${{ secrets.GHUB_TOKEN }}
+            SMTP_HOST=${{ secrets.SMTP_HOST }}
+            SMTP_PORT=${{ secrets.SMTP_PORT }}
+            SMTP_USER=${{ secrets.SMTP_USER }}
+            SMTP_PASS=${{ secrets.SMTP_PASS }}
+            EMAIL_FROM=${{ secrets.EMAIL_FROM }}
+            EMAIL_TO=${{ secrets.EMAIL_TO }}
+            EOF
             
             # Install dependencies
             cd ~/app/Client
