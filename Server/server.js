@@ -12,7 +12,7 @@ import { Filter } from 'bad-words';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const cache = new NodeCache({ stdTTL: 1200 });
+const cache = new NodeCache({ stdTTL: 120 }); // Kept in case used elsewhere
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -22,7 +22,7 @@ const WHITELISTED_IP = process.env.WHITELISTED_IP;
 const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
 
 const profanityFilter = new Filter();
-profanityFilter.addWords('wanker', 'twat'); // Ensure these words are caught
+profanityFilter.addWords('wanker', 'twat');
 
 const validateEmail = email =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -33,7 +33,6 @@ const validateName = name =>
 const containsLink = str =>
   /https?:\/\/|www\./i.test(str);
 
-// Server-side profanity check
 const containsProfanity = (str) => {
   try {
     return profanityFilter.isProfane(str);
@@ -54,13 +53,29 @@ async function initializeHighscores() {
 initializeHighscores();
 
 const contactLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
+  windowMs: 60 * 60 * 1000, // 1 hour
   max: 5,
-  skip: (req, res) => {
-    return req.ip === WHITELISTED_IP;
-  },
+  skip: (req) => req.ip === WHITELISTED_IP,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many messages sent. Please try again later.' });
+  },
+});
+
+const commitsLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, 
+  max: 100, 
+  skip: (req) => req.ip === WHITELISTED_IP,
+  handler: (req, res) => {
+    res.status(429).json({ message: 'Too many requests to fetch commits. Please try again later.' });
+  },
+});
+
+const snippetLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, 
+  max: 50, 
+  skip: (req) => req.ip === WHITELISTED_IP,
+  handler: (req, res) => {
+    res.status(429).json({ message: 'Too many requests to fetch snippets. Please try again later.' });
   },
 });
 
@@ -105,14 +120,7 @@ app.post('/api/highscores', async (req, res) => {
   }
 });
 
-app.get('/api/commits', async (req, res) => {
-  const cacheKey = 'latestCommits';
-  const cachedData = cache.get(cacheKey);
-
-  if (cachedData) {
-    return res.json(cachedData);
-  }
-
+app.get('/api/commits', commitsLimiter, async (req, res) => {
   try {
     const eventsRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public`, {
       headers: {
@@ -163,7 +171,6 @@ app.get('/api/commits', async (req, res) => {
       })
     );
 
-    cache.set(cacheKey, commitContents);
     res.json(commitContents);
   } catch (error) {
     console.error(error);
@@ -171,7 +178,7 @@ app.get('/api/commits', async (req, res) => {
   }
 });
 
-app.get('/api/snippet', async (req, res) => {
+app.get('/api/snippet', snippetLimiter, async (req, res) => {
   const { url } = req.query;
 
   if (!url) {
@@ -183,14 +190,6 @@ app.get('/api/snippet', async (req, res) => {
   if (!url.startsWith(allowedPrefix)) {
     console.warn(`Blocked snippet request for invalid URL: ${url}`);
     return res.status(403).json({ error: 'Access to this URL is not allowed' });
-  }
-
-  const cacheKey = `snippet:${url}`;
-  const cachedSnippet = cache.get(cacheKey);
-
-  if (cachedSnippet) {
-    res.set('Content-Type', 'text/plain');
-    return res.send(cachedSnippet);
   }
 
   try {
@@ -206,7 +205,6 @@ app.get('/api/snippet', async (req, res) => {
     }
 
     const code = await response.text();
-    cache.set(cacheKey, code);
     res.set('Content-Type', 'text/plain');
     res.send(code);
   } catch (error) {
