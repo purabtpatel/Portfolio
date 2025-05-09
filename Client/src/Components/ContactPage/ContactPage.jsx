@@ -9,6 +9,7 @@ import CodeSnippet from "../AboutPage/CodeSnippet/CodeSnippet";
 function ContactPage() {
     const [form, setForm] = useState({ name: "", email: "", message: "" });
     const [status, setStatus] = useState("");
+    const uri = import.meta.env.VITE_API_URL;
 
     const handleChange = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,7 +19,7 @@ function ContactPage() {
         e.preventDefault();
         setStatus("Sending...");
 
-        const apiUrl = "http://localhost:5000/api/contact";
+        const apiUrl = `${uri}contact`;
 
         try {
 

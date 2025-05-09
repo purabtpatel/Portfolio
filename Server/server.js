@@ -17,8 +17,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 const GITHUB_USERNAME = 'purabtpatel';
-const WHITELISTED_IP = process.env.WHITELISTED_IP;
 const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
 
 const profanityFilter = new Filter();
@@ -55,7 +55,6 @@ initializeHighscores();
 const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 5,
-  skip: (req) => req.ip === WHITELISTED_IP,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many messages sent. Please try again later.' });
   },
@@ -64,7 +63,6 @@ const contactLimiter = rateLimit({
 const commitsLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, 
   max: 100, 
-  skip: (req) => req.ip === WHITELISTED_IP,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many requests to fetch commits. Please try again later.' });
   },
@@ -73,7 +71,6 @@ const commitsLimiter = rateLimit({
 const snippetLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, 
   max: 50, 
-  skip: (req) => req.ip === WHITELISTED_IP,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many requests to fetch snippets. Please try again later.' });
   },
@@ -124,7 +121,7 @@ app.get('/api/commits', commitsLimiter, async (req, res) => {
   try {
     const eventsRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public`, {
       headers: {
-        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
         'User-Agent': 'Portfolio-App'
       }
     });
@@ -150,7 +147,7 @@ app.get('/api/commits', commitsLimiter, async (req, res) => {
       commits.map(async commit => {
         const commitRes = await fetch(commit.url, {
           headers: {
-            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
             'User-Agent': 'Portfolio-App'
           }
         });
@@ -195,7 +192,7 @@ app.get('/api/snippet', snippetLimiter, async (req, res) => {
   try {
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
         'User-Agent': 'Portfolio-App'
       }
     });
@@ -268,6 +265,5 @@ app.post('/api/contact', contactLimiter, express.json(), async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log('Server running on http://localhost:5000');
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));

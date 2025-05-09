@@ -6,6 +6,9 @@ const BOARD_SIZE = 40;
 const TICK_RATE = 60;
 const CANVAS_SIZE = BOARD_SIZE * CELL_SIZE;
 
+const uri = import.meta.env.VITE_API_URL;
+
+
 
 const PROFANITY_REGEX = /\b(fuck|shit|damn|ass|bitch|cunt|dick|piss|cock|bastard)\b/i;
 
@@ -67,7 +70,7 @@ const SnakeGame = ({ score, setScore, highscores, setHighscores, setDisplayInstr
 
     const fetchHighscores = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/highscores');
+            const response = await fetch(`${uri}highscores`);
             if (!response.ok) throw new Error('Failed to fetch highscores');
             const data = await response.json();
             setHighscores(Array.isArray(data) ? data : []);
@@ -92,7 +95,7 @@ const SnakeGame = ({ score, setScore, highscores, setHighscores, setDisplayInstr
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/highscores', {
+            const response = await fetch(`${uri}highscores`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

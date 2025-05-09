@@ -12,11 +12,13 @@ hljs.registerLanguage("xml", xml);
 const CodeSnippet = ({ raw_url }) => {
     const [highlightedCode, setHighlightedCode] = useState(null);
     const [error, setError] = useState(null);
+    
+    const uri = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchAndHighlightCode = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/snippet?url=${encodeURIComponent(raw_url)}`);
+                const res = await fetch(`${uri}snippet?url=${encodeURIComponent(raw_url)}`);
                 if (!res.ok) throw new Error("Network response was not ok");
                 const code = await res.text();
 
