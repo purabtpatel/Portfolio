@@ -37,38 +37,38 @@ jobs:
             sudo apt-get install -y nodejs nginx
             
             # Set up folders
-            mkdir -p ~/app/client ~/app/server
+            mkdir -p ~/app/Client ~/app/Server
 
-            # Write client .env
-            echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/app/client/.env
+            # Write Client .env
+            echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/app/Client/.env
            
-            # Write server .env
-            echo "PORT=${{ secrets.PORT }}" > ~/app/server/.env
-            echo "GHUB_TOKEN=${{ secrets.GHUB_TOKEN }}" > ~/app/server/.env
-            echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" > ~/app/server/.env
-            echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" > ~/app/server/.env
-            echo "SMTP_USER=${{ secrets.SMTP_USER }}" > ~/app/server/.env
-            echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" > ~/app/server/.env
-            echo "EMAIL_FROM=${{ secrets.EMAIL_FROM }}" > ~/app/server/.env
-            echo "EMAIL_TO=${{ secrets.EMAIL_TO }}" > ~/app/server/.env
+            # Write Server .env
+            echo "PORT=${{ secrets.PORT }}" > ~/app/Server/.env
+            echo "GHUB_TOKEN=${{ secrets.GHUB_TOKEN }}" > ~/app/Server/.env
+            echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" > ~/app/Server/.env
+            echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" > ~/app/Server/.env
+            echo "SMTP_USER=${{ secrets.SMTP_USER }}" > ~/app/Server/.env
+            echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" > ~/app/Server/.env
+            echo "EMAIL_FROM=${{ secrets.EMAIL_FROM }}" > ~/app/Server/.env
+            echo "EMAIL_TO=${{ secrets.EMAIL_TO }}" > ~/app/Server/.env
             
             # Install dependencies
-            cd ~/app/client
+            cd ~/app/Client
             npm install
             npm run build
 
-            cd ~/app/server
+            cd ~/app/Server
             npm install
 
             # Restart Express backend (using pm2 for process management)
             if ! command -v pm2 &> /dev/null; then
               sudo npm install -g pm2
             fi
-            pm2 start index.js --name backend --cwd ~/app/server --update-env || pm2 restart backend
+            pm2 start server.js --name backend --cwd ~/app/Server --update-env || pm2 restart backend
 
             # Deploy frontend build to NGINX
             sudo rm -rf /var/www/html/*
-            sudo cp -r ~/app/client/dist/* /var/www/html/
+            sudo cp -r ~/app/Client/dist/* /var/www/html/
 
             # Start NGINX
             sudo systemctl enable nginx
