@@ -71,7 +71,40 @@ jobs:
             sudo rm -rf /var/www/html/*
             sudo cp -r ~/app/Client/dist/* /var/www/html/
 
-            # Start NGINX
-            sudo systemctl enable nginx
+      - name: Deploy Nginx configuration
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            # Copy Nginx config to sites-available
+            sudo bash -c 'cat > /etc/nginx/sites-available/purabpatel.com' << 'EOF'
+            server {
+                listen 80;
+                server_name purabpatel.com www.purabpatel.com;
+
+                location /api/ {
+                    proxy_pass http://localhost:5000;
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                }
+
+                location / {
+                    root /var/www/html;
+                    try_files $uri /index.html;
+                }
+            }
+            EOF
+
+            # Enable the configuration by creating a symlink
+            sudo ln -sf /etc/nginx/sites-available/purabpatel.com /etc/nginx/sites-enabled/
+
+            # Remove default Nginx configuration
+            sudo rm -f /etc/nginx/sites-enabled/default
+
+            # Test Nginx configuration
+            sudo nginx -t
+
+            # Restart Nginx
             sudo systemctl restart nginx
-            
