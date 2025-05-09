@@ -54,6 +54,7 @@ jobs:
             
             # Install dependencies
             cd ~/app/Client
+            rm -rf node_modules package-lock.json
             npm install
             npm run build
 
