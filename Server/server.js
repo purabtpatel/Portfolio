@@ -133,18 +133,17 @@ app.get('/api/commits', commitsLimiter, async (req, res) => {
       return res.status(500).json({ error: 'GitHub API returned unexpected data', details: events });
     }
 
-    const commits = events
+    const allCommits = events
       .filter(event => event.type === 'PushEvent')
       .flatMap(event => event.payload.commits.map(commit => ({
         message: commit.message,
         url: commit.url,
         repo: event.repo.name,
         timestamp: event.created_at
-      })))
-      .slice(0, 6);
+      })));
 
     const commitContents = await Promise.all(
-      commits.map(async commit => {
+      allCommits.map(async commit => {
         const commitRes = await fetch(commit.url, {
           headers: {
             Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
@@ -158,17 +157,28 @@ app.get('/api/commits', commitsLimiter, async (req, res) => {
           !file.filename.match(/\.(css|md|svg|png|jpg|jpeg|json|xml|html|gif|txt|lock|yml|yaml|log|gitignore|config\.js)$/)
         );
 
-        return {
-          ...commit,
-          files: files.map(file => ({
-            filename: file.filename,
-            raw_url: file.raw_url
-          }))
-        };
+        if (files.length > 0) {
+          return {
+            ...commit,
+            files: files.map(file => ({
+              filename: file.filename,
+              raw_url: file.raw_url
+            }))
+          };
+        }
+        return null;
       })
     );
 
-    res.json(commitContents);
+    const validCommits = commitContents
+      .filter(commit => commit !== null)
+      .slice(0, 10);
+
+    if (validCommits.length === 0) {
+      return res.status(404).json({ message: 'No commits found with matching files' });
+    }
+
+    res.json(validCommits);
   } catch (error) {
     console.error(error);
     res.status(500).send('Error fetching commits');

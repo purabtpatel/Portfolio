@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import "./ContactPage.css"; 
 import AboutContactsComponent from "../AboutPage/AboutContactsComponent/AboutContactsComponent";
@@ -97,9 +96,7 @@ function ContactPage() {
                         </form>
                     </div>
                     <div className="code-snippet-scroll-container">
-                        <CodeSnippet raw_url="https://github.com/purabtpatel/Portfolio/raw/f672fb1764f36b76449865afff2ef49b2d35d606/Client%2Fsrc%2FComponents%2FContactPage%2FContactPage.jsx
-" />
-
+                        <CodeSnippet raw_url="https://github.com/purabtpatel/Portfolio/raw/c31f420ccee8891205f3438f88d54443257a26e6/Client%2Fsrc%2FComponents%2FContactPage%2FContactPage.jsx" />
                     </div>
                 </div>
 

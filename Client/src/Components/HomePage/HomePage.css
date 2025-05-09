@@ -79,6 +79,7 @@
     text-align: center;
     color: var(--default-medium);
     display: flex;
+    z-index: 11;
 }
 
 .screw {
@@ -163,25 +164,28 @@
     background: radial-gradient(circle at 50% 50%, #1d38ff, rgba(76, 0, 255, 0));
     border-radius: 0 0 50% 50%;
     position: fixed;
-    right: 100px;
-    bottom: 100px;
+    right: 5%;
+    bottom: 5%;
     filter: blur(120px);
     height: 500px;
     opacity: 0.5;
     width: 500px;
+    pointer-events: none;
     z-index: 10;
 }
 
 .css-blurry-gradient-green {
     background: radial-gradient(circle at 50% 50%, #00ffb3, rgba(76, 0, 255, 0));
     border-radius: 0 50%;
-    position: absolute;
-    right: 350px;
-    top: -50px;
+    position: fixed;
+    right: 35%;
+    top: 10%;
     filter: blur(100px);
     height: 300px;
     opacity: 0.5;
     width: 300px;
+    pointer-events: none;
+    
     z-index: 1;
 }
 

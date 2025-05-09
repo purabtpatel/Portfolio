@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import CodeCard from './CodeCard';
-import './CodeShowcase.css'; // Assuming you have a CSS file for styling
+import './CodeShowcase.css';
 import CodeComment from '../../CodeComment/CodeComment';
 
 const CodeShowcase = () => {
@@ -16,7 +16,7 @@ const CodeShowcase = () => {
     fetch('http://localhost:5000/api/commits')
       .then(res => res.json())
       .then(data => {
-        console.log('Fetched commits:', data); // 👈 This will show what the server returns
+        console.log('Fetched commits:', data);
         setCommits(data);
       })
       .catch(err => console.error('Failed to load commits', err));
@@ -37,16 +37,3 @@ const CodeShowcase = () => {
 };
 
 export default CodeShowcase;
-
-
-
-{/* <div className='code-showcase-header'>
-       <h3>// Recent commits:</h3>
-      </div>
-      <div className="code-showcase">
-        <div className="grid">
-          {commits.map((commit, idx) => (
-            <CodeCard key={idx} {...commit} />
-          ))}
-        </div>
-      </div> */}
