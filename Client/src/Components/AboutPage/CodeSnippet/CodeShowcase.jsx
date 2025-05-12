@@ -12,9 +12,10 @@ const CodeShowcase = () => {
     "tech-skills": "I am proficient in JavaScript, React, Node.js, and Express. I have experience with databases like MongoDB and PostgreSQL. I also have a strong understanding of RESTful APIs and web services...",
     "soft-skills": "I bring strong problem-solving skills, teamwork, and communication to every project. I am adaptable, detail-oriented, and always eager to learn and improve..."
   };
-
+  const uri = import.meta.env.VITE_API_URL;
+  const fetchUrl = `${uri}commits`;
   useEffect(() => {
-    fetch('http://localhost:5000/api/commits')
+    fetch(fetchUrl)
       .then(res => {
         if (!res.ok) {
           if (res.status === 429) {
