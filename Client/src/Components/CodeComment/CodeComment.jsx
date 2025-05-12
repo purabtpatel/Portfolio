@@ -11,25 +11,28 @@ const CodeComment = ({ text }) => {
     const lines = [];
 
     rawLines.forEach((rawLine, rawIndex) => {
-      const words = rawLine.trim().split(/\s+/);
-      let currentLine = "";
+      if (rawLine.trim() === "") {
+        // Preserve empty lines (e.g., from \n\n)
+        lines.push("");
+      } else {
+        const words = rawLine.trim().split(/\s+/);
+        let currentLine = "";
 
-      words.forEach((word) => {
-        if ((currentLine + word).length > charPerRow) {
-          if (currentLine.trim()) {
-            lines.push(currentLine.trim());
+        words.forEach((word) => {
+          if ((currentLine + word).length > charPerRow) {
+            if (currentLine.trim()) {
+              lines.push(currentLine.trim());
+            }
+            currentLine = word + " ";
+          } else {
+            currentLine += word + " ";
           }
-          currentLine = word + " ";
-        } else {
-          currentLine += word + " ";
+        });
+
+        if (currentLine.trim()) {
+          lines.push(currentLine.trim());
         }
-      });
-
-      if (currentLine.trim()) {
-        lines.push(currentLine.trim());
       }
-
-      
     });
 
     return lines;
