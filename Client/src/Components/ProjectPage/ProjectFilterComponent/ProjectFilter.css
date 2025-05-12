@@ -1,0 +1,65 @@
+.filter-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 700px;
+    font-family: sans-serif;
+    color: var(--bright-lines);
+}
+
+.filter-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--bluer-lines);
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-tag {
+    background-color: transparent;
+    border: 1px solid var(--lines);
+    color: var(--bright-lines);
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.filter-tag:hover {
+    background-color: var(--hover-color, #444);
+}
+
+.filter-tag.active {
+    background-color: var(--button-background);
+    color: white;
+    border-color: var(--button-background);
+}
+
+.project-filter-column {
+    width: 255px;
+    flex-shrink: 0;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid var(--lines);
+    
+}
+
+.project-filter-header {
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--lines);
+}
+
+.project-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    overflow-y: auto;
+}

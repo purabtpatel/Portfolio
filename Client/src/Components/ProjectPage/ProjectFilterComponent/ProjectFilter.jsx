@@ -1,14 +1,76 @@
-import React, { useEffect, useState} from "react";
-const ProjectFilter = () => {
+import React, { useState } from 'react';
+import {
+    FormGroup,
+    FormControlLabel,
+    Checkbox,
+    Typography,
+    Box
+} from '@mui/material';
+import {
+    faReact,
+    faJsSquare,
+    faPython,
+    faNodeJs,
+    faHtml5,
+    faCss3Alt,
+    faNpm,
+    faGitAlt,
+} from "@fortawesome/free-brands-svg-icons";
+import './ProjectFilter.css';
 
-    const [filters, setFilters] = useState([])
+const tagIcons = {
+    React: faReact,
+    JavaScript: faJsSquare,
+    Python: faPython,
+    NodeJS: faNodeJs,
+    HTML: faHtml5,
+    CSS: faCss3Alt,
+    NPM: faNpm,
+    Git: faGitAlt,
+};
+const techOptions = Object.keys(tagIcons);
+
+const ProjectFilter = ({ selectedTags = [], onTagChange }) => {
+    const [activeTags, setActiveTags] = useState(selectedTags);
+
+    const handleChange = (event) => {
+        const tag = event.target.name;
+        const newTags = event.target.checked
+            ? [...activeTags, tag]
+            : activeTags.filter(t => t !== tag);
+
+        setActiveTags(newTags);
+        onTagChange(newTags);
+    };
 
     return (
-        <div className='filter-container'>
-            <div className='filter-header'>
-
+        <div className="project-filter-column">
+            <div className="project-filter-header">
+                projects
             </div>
-            <div className='Filters'>
+            <div className='project-filters'>
+                <FormGroup column>
+                    {techOptions.map((tag) => (
+                        <FormControlLabel
+                            key={tag}
+                            control={
+                                <Checkbox
+                                    checked={activeTags.includes(tag)}
+                                    onChange={handleChange}
+                                    name={tag}
+                                    sx={{
+                                        color: 'var(--bright-lines)',
+                                        '&.Mui-checked': {
+                                            color: 'var(--button-background)',
+                                        },
+                                    }}
+                                />
+                            }
+                            label={tag}
+                            sx={{ color: 'var(--bright-lines)' }}
+                        />
+                    ))}
+                </FormGroup>
 
             </div>
         </div>

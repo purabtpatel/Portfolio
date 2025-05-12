@@ -1,20 +1,51 @@
 import React from "react";
 import "./ProjectCard.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faReact,
+  faJsSquare,
+  faPython,
+  faNodeJs,
+  faHtml5,
+  faCss3Alt,
+  faNpm,
+  faGitAlt,
+} from "@fortawesome/free-brands-svg-icons";
 
-import backgroundImageOne from '../BackgroundImages/pexels-alesiakozik-6770610.jpg';
 
 const tagColors = {
-  React: "#61dafb",
-  JavaScript: "#f7df1e",
-  Nginx: "#009639",
-  Python: "#3776ab",
-  NodeJS: "#3c873a",
-  HTML: "#e34f26",
-  CSS: "#264de4",
-  // Add more as needed
+  React: "var(--teal-300)",
+  JavaScript: "var(--accent-orange)",
+  Nginx: "var(--success-700)",
+  Python: "var(--info-400)",
+  NodeJS: "var(--success-500)",
+  HTML: "var(--orange-400)",
+  CSS: "var(--accent-blue)",
+  TypeScript: "var(--indigo-500)",
+  Git: "var(--orange-600)",
+  Docker: "var(--teal-800)",
 };
 
-const ProjectCard = ({ title, shortDescription, longDescription, image, projectUrl, websiteUrl, tags = [] }) => {
+const tagIcons = {
+  React: faReact,
+  JavaScript: faJsSquare,
+  Python: faPython,
+  NodeJS: faNodeJs,
+  HTML: faHtml5,
+  CSS: faCss3Alt,
+  NPM: faNpm,
+  Git: faGitAlt,
+};
+
+const ProjectCard = ({
+  title,
+  shortDescription,
+  longDescription,
+  image,
+  projectUrl,
+  websiteUrl,
+  tags = [],
+}) => {
   return (
     <div className="project-card-container">
       <div className="project-card-header">
@@ -32,13 +63,16 @@ const ProjectCard = ({ title, shortDescription, longDescription, image, projectU
               <div
                 key={tag}
                 className="tag-icon"
-                style={{ backgroundColor: tagColors[tag] || "#ccc" }}
+                style={{ backgroundColor: tagColors[tag] || "var(--gray-600)" }}
                 title={tag}
               >
-                <img
-                  src={`/logos/${tag.toLowerCase()}.svg`}
-                  alt={tag}
-                />
+                {tagIcons[tag] ? (
+                  <FontAwesomeIcon icon={tagIcons[tag]} color="black" size="lg" />
+                ) : (
+                  <span style={{ fontSize: "0.75rem", color: "#000" }}>
+                    {tag}
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -47,16 +81,24 @@ const ProjectCard = ({ title, shortDescription, longDescription, image, projectU
         <div className="project-card-content">
           <p className="description">{longDescription}</p>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-          {websiteUrl && (
-          <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className="project-link">
-            View website
-          </a>
-
-          )}
-          
-          <a href={projectUrl} target="_blank" rel="noopener noreferrer" className="project-link">
-            View Project on GitHub
-          </a>
+            {websiteUrl && (
+              <a
+                href={websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="project-link"
+              >
+                View website
+              </a>
+            )}
+            <a
+              href={projectUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-link"
+            >
+              View Project on GitHub
+            </a>
           </div>
         </div>
       </div>

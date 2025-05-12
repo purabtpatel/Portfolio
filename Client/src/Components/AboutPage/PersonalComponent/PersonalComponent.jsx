@@ -10,8 +10,9 @@ const PersonalComponent = () => {
 
     const textContent = {
         "hobbies": "In my free time, I enjoy learning about financial markets and instruments, gaming with my friends, and spending time outdoors and exploring nature.",
-        "values": "Integrity, having curiosity in everything I do, strong moral compass. A few motos and life lessons I hold myself to: Growth is not linear. The harder you work, the luckier you get. Never criticize, condemn, or complain.",
-        "goals": "I believe that materialistic goals are strong impulsive drivers but also equally as shallow. So I use short term materialistic goals to make progress towards more meaningful goals like becoming a better person, spiritually, physically, and emotionally."
+        "values": "Integrity, having curiosity in everything I do, strong moral compass. A few motos and life lessons I hold myself to: \nGrowth is not linear. \nThe harder you work, the luckier you get. \nNever criticize, condemn, or complain.",
+        "goals": "I believe that materialistic goals are strong impulsive drivers but also equally as shallow. So I use short term materialistic goals to make progress towards more meaningful goals like becoming a better person, spiritually, physically, and emotionally.",
+        
     };
 
     return (

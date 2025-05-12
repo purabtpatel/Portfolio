@@ -12,11 +12,10 @@ import { Filter } from 'bad-words';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const cache = new NodeCache({ stdTTL: 120 }); // Kept in case used elsewhere
+const cache = new NodeCache({ stdTTL: 300 }); 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 
 const GITHUB_USERNAME = 'purabtpatel';
 const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
@@ -53,7 +52,7 @@ async function initializeHighscores() {
 initializeHighscores();
 
 const contactLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: 60 * 60 * 1000, 
   max: 50,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many messages sent. Please try again later.' });
@@ -62,7 +61,7 @@ const contactLimiter = rateLimit({
 
 const commitsLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, 
-  max: 100, 
+  max: 200, 
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many requests to fetch commits. Please try again later.' });
   },
@@ -70,7 +69,7 @@ const commitsLimiter = rateLimit({
 
 const snippetLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, 
-  max: 50, 
+  max: 200,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many requests to fetch snippets. Please try again later.' });
   },
@@ -118,6 +117,15 @@ app.post('/api/highscores', async (req, res) => {
 });
 
 app.get('/api/commits', commitsLimiter, async (req, res) => {
+  const cacheKey = 'github_commits';
+  const cachedCommits = cache.get(cacheKey);
+
+  if (cachedCommits) {
+    console.log('Serving from cache');
+    return res.json(cachedCommits);
+  }
+  console.log('Fetching from GitHub API');
+
   try {
     const eventsRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public`, {
       headers: {
@@ -178,6 +186,7 @@ app.get('/api/commits', commitsLimiter, async (req, res) => {
       return res.status(404).json({ message: 'No commits found with matching files' });
     }
 
+    cache.set(cacheKey, validCommits);
     res.json(validCommits);
   } catch (error) {
     console.error(error);
@@ -199,6 +208,16 @@ app.get('/api/snippet', snippetLimiter, async (req, res) => {
     return res.status(403).json({ error: 'Access to this URL is not allowed' });
   }
 
+  const cacheKey = `snippet_${url}`;
+  const cachedSnippet = cache.get(cacheKey);
+
+  if (cachedSnippet) {
+    console.log('Serving from cache');
+    res.set('Content-Type', 'text/plain');
+    return res.send(cachedSnippet);
+  }
+  console.log('Fetching from GitHub API:', url);
+
   try {
     const response = await fetch(url, {
       headers: {
@@ -212,6 +231,7 @@ app.get('/api/snippet', snippetLimiter, async (req, res) => {
     }
 
     const code = await response.text();
+    cache.set(cacheKey, code);
     res.set('Content-Type', 'text/plain');
     res.send(code);
   } catch (error) {

@@ -9,7 +9,7 @@ const ProfessionalComponent = () => {
     const [sectionSelected, setSectionSelected] = useState("experience");
 
     const textContent = {
-        "experience": "Over the past two years, I have worked at NJ Courts as a junior developer supporting and upgrading internal applications used by staff at the courts. I have been involved in developing for both backend and frontend using Java and JSF. \nI also have lots of fun using JavaScript and libraries like React, and have built numerous  projects, including this portfolio site, using JavaScript. My go-to cloud provider is AWS, and I have a certified cloud practitioner certification with plans of expanding my skills with other AWS certifications. ",
+        "experience": "Over the past two years, I have worked at NJ Courts as a junior developer supporting and upgrading internal applications used by staff at the courts. I have been involved in developing for both backend and frontend using Java and JSF.\n \nI also have lots of fun using JavaScript and libraries like React, and have built numerous  projects, including this portfolio site, using JavaScript. My go-to cloud provider is AWS, and I have a certified cloud practitioner certification with plans of expanding my skills with other AWS certifications. ",
         "tech-skills": "I am proficient in JavaScript, React, Node.js, Express, Java EE, JSF. I have experience administering and/or configuring AWS resources like EC2, S3, IAM, SES, Route 53. I also have a strong understanding of RESTful APIs and web services.",
         "soft-skills": "I bring strong problem-solving skills, teamwork, and communication to every project. I am adaptable, persistent, and always eager to learn and improve."
     };
