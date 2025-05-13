@@ -40,7 +40,7 @@ jobs:
             mkdir -p ~/app/Client ~/app/Server
 
             # Write Client .env
-            echo "VITE_API_URL=https://purabpatel.com/api/" >> ~/app/Client/.env           
+            echo "VITE_API_URL=https://purabpatel.com/api/" > ~/app/Client/.env           
             
             # Write Server .env
             sudo bash -c 'cat > ~/app/Server/.env' << 'EOF'

@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 const GITHUB_USERNAME = 'purabtpatel';
-const HIGHSCORES_FILE = path.join(__dirname, 'highscores.json');
+const HIGHSCORES_FILE = process.env.HIGHSCORES_FILE_PATH || path.join(__dirname, 'highscores.json');
 
 const profanityFilter = new Filter();
 profanityFilter.addWords('wanker', 'twat');
