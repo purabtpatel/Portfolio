@@ -6,13 +6,16 @@ const CodeComment = ({ text }) => {
   const containerRef = useRef(null);
 
   const splitTextIntoLines = (text, containerWidth) => {
+    if (!text || typeof text !== "string") {
+      return [];
+    }
+
     const charPerRow = Math.max(10, Math.floor(containerWidth / 8));
     const rawLines = text.split("\n");
     const lines = [];
 
-    rawLines.forEach((rawLine, rawIndex) => {
+    rawLines.forEach((rawLine) => {
       if (rawLine.trim() === "") {
-        // Preserve empty lines (e.g., from \n\n)
         lines.push("");
       } else {
         const words = rawLine.trim().split(/\s+/);
@@ -58,16 +61,24 @@ const CodeComment = ({ text }) => {
         <span>/**</span>
       </div>
       <div className="code-content">
-        {formattedLines.map((line, index) => (
-          <div className="code-grid-row" key={index + 2}>
-            <span className="code-line-number">{index + 2}</span>
+        {formattedLines.length > 0 ? (
+          formattedLines.map((line, index) => (
+            <div className="code-grid-row" key={index + 2}>
+              <span className="code-line-number">{index + 2}</span>
+              <span className="comment-symbol">*</span>
+              <span className="code-text">{line}</span>
+            </div>
+          ))
+        ) : (
+          <div className="code-grid-row">
+            <span className="code-line-number">2</span>
             <span className="comment-symbol">*</span>
-            <span className="code-text">{line}</span>
+            <span className="code-text">No content available</span>
           </div>
-        ))}
+        )}
       </div>
       <div className="code-line">
-        <span className="code-line-number">{formattedLines.length + 2}</span>
+        <span className="code-line-number">{formattedLines.length > 0 ? formattedLines.length + 2 : 3}</span>
         <span style={{ marginLeft: "15px" }}>*/</span>
       </div>
     </div>
