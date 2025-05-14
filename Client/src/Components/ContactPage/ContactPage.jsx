@@ -8,6 +8,13 @@ import CodeSnippet from "../AboutPage/CodeSnippet/CodeSnippet";
 function ContactPage() {
     const [form, setForm] = useState({ name: "", email: "", message: "" });
     const [status, setStatus] = useState("");
+
+    const contactHeader = 'Contact me';
+    const contactList = [
+        'Email: purabtpatel@gmail.com',
+        'Phone: +1 (732)692-3419',
+    ];
+
     const uri = import.meta.env.VITE_API_URL;
 
     const handleChange = e => {
@@ -52,7 +59,7 @@ function ContactPage() {
     return (
         <div className="contact-Page">
             <div className="contacts-section-Header">
-                <AboutContactsComponent />
+                <AboutContactsComponent header={contactHeader} list={contactList} />
             </div>
             <div className="contact-main-page">
                 <div className="contact-header">

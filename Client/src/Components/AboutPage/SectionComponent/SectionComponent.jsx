@@ -32,6 +32,7 @@ const SectionComponent = ({ sectionName, textContent, classPrefix }) => {
                     <FontAwesomeIcon icon={faChevronDown} />
                     <h3>{sectionName}-info</h3>
                 </div>
+                <div className='info-selection-buttons'>
                 {Object.keys(textContent).map((section, index) => (
                     <button
                         key={section}
@@ -47,6 +48,7 @@ const SectionComponent = ({ sectionName, textContent, classPrefix }) => {
                         {section.replace('-', ' ')}
                     </button>
                 ))}
+                </div>
                 <div className="resume-download">
                     <a
                         href=""

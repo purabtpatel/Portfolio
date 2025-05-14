@@ -89,7 +89,12 @@
     flex-direction: column;
   }
 
-/* PhotoCard.css */
+  .info-selection-buttons{
+    border-bottom: 1px solid var(--lines);
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
 .photo-card {
     width: 15em;
     height: 15em;
