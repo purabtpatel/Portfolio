@@ -7,7 +7,7 @@
   background: none;
     border: none;
     font-size: 14px;
-    padding: 7px;
+    padding: 12px;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -16,6 +16,8 @@
     gap: 7px;
     color: var(--accent-blue);
     font-family: 'Fira Code Retina', monospace;
+
+
 }
 .icon-container{
   min-width: 14px;
