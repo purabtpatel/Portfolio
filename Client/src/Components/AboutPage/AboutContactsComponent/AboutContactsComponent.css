@@ -1,21 +1,28 @@
 .contacts-dropdown {
+
   display: flex;
   flex-direction: column;
 }
 .dropdown-button {
   background: none;
-  border: none;
-  color: var(--secondary-white);
-  font-family: 'Fira Code Retina', monospace;
-  font-size: 12px;
-  height:40px;
-  display: flex;
-  align-items: center;;
-  gap: 10px;
-  cursor: pointer;
-  padding-left: 10px;
+    border: none;
+    font-size: 14px;
+    padding: 7px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: color 0.1s ease, background-color 0.1s ease;
+    text-align: left;
+    gap: 7px;
+    color: var(--accent-blue);
+    font-family: 'Fira Code Retina', monospace;
+    border-top: 1px solid var(--lines);
+    margin-top: 10px;
 }
+.icon-container{
+  min-width: 14px;
 
+}
 
 .dropdown-content {
   flex-direction: column;
@@ -23,5 +30,6 @@
   border-top: 1px solid var(--lines);
   color: var(--accent-blue);
   font-size: 11px;
+
 
 }

@@ -40,6 +40,10 @@
   .arrow-icon {
     min-width: 14px;
   }
+
+  .resume-download{
+    padding-left:22px;
+  }
   
   .folder-icon {
     transition: color 0.3s ease;
@@ -48,6 +52,7 @@
   .folder-0 { color: var(--gradient-color-1); }
   .folder-1 { color: var(--gradient-color-2); }
   .folder-2 { color: var(--gradient-color-3); }
+  .folder-3 { color: var(--info-200); }
   
   .info-selection-title {
     display: flex;
@@ -73,7 +78,7 @@
     padding: 10px;
     min-height: 20px;
     border-right: 1px solid var(--lines);
-    width: 140px;
+    width: 194px;
   }
   
   .info-content-body {
@@ -82,4 +87,29 @@
     border-top: 1px solid var(--lines);
     display: flex;
     flex-direction: column;
+  }
+
+/* PhotoCard.css */
+.photo-card {
+    width: 15em;
+    height: 15em;
+    background-size: cover;
+    background-position: center;
+    
+  }
+  
+  .certification-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+    border-top: 1px solid var(--lines);
+  }
+  
+  .certification-link {
+    display: block;
+    text-decoration: none;
+    width: 15em;
+    height: 15em;
   }

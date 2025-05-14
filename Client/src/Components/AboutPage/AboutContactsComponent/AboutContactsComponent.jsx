@@ -1,29 +1,33 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import './AboutContactsComponent.css'; // Assuming you have a CSS file for styling
+import './AboutContactsComponent.css';
 
-const AboutContactsComponent = () => {
-    {
-        const [isContactsOpen, setIsContactsOpen] = useState(true);
-      
-        return (
-          <div className="contacts-dropdown">
-            <button className="dropdown-button" onClick={() => setIsContactsOpen(!isContactsOpen)}>
-            <div className="icon-container">
-              <FontAwesomeIcon icon={isContactsOpen ? faChevronDown : faChevronRight} />
-            </div>
-            contacts
-            </button>
-            {isContactsOpen && (
-              <div className="dropdown-content">
-                <p>Email: purabtpatel@gmail.com</p>
-                <p>Phone: (732)692-3419</p>
-              </div>
-            )}
-          </div>
-        );
-    }
+const AboutContactsComponent = ({ header, list }) => {
+  const [isContactsOpen, setIsContactsOpen] = useState(true);
+
+  return (
+    <div className="contacts-dropdown">
+      <button
+        className="dropdown-button"
+        onClick={() => setIsContactsOpen(!isContactsOpen)}
+      >
+        <div className="icon-container" >
+          <FontAwesomeIcon icon={isContactsOpen ? faChevronDown : faChevronRight} />
+        </div>
+        {header}
+      </button>
+      {isContactsOpen && (
+        <div className="dropdown-content">
+          {list.map((item, index) => (
+            <p key={index} className="contact-item">
+              {item}
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
+
 export default AboutContactsComponent;
