@@ -41,15 +41,7 @@ const containsProfanity = (str) => {
   }
 };
 
-async function initializeHighscores() {
-  try {
-    await fs.access(HIGHSCORES_FILE);
-  } catch {
-    await fs.writeFile(HIGHSCORES_FILE, JSON.stringify([]));
-  }
-}
 
-initializeHighscores();
 
 const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, 
@@ -86,6 +78,47 @@ app.get('/api/highscores', async (req, res) => {
   }
 });
 
+async function initializeHighscores() {
+  try {
+    const data = await fs.readFile(HIGHSCORES_FILE, 'utf8');
+    if (!data.trim()) {
+      console.log('Highscores file is empty, initializing with []');
+      await fs.writeFile(HIGHSCORES_FILE, JSON.stringify([], null, 2));
+      return;
+    }
+    JSON.parse(data);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('Highscores file not found, creating new file');
+      await fs.writeFile(HIGHSCORES_FILE, JSON.stringify([], null, 2));
+    } else {
+      console.error('Error initializing highscores file:', error);
+      throw error;
+    }
+  }
+}
+
+await initializeHighscores();
+
+app.get('/api/highscores', async (req, res) => {
+  try {
+    const data = await fs.readFile(HIGHSCORES_FILE, 'utf8');
+    if (!data.trim()) {
+      console.warn('Highscores file is empty');
+      return res.json([]);
+    }
+    const highscores = JSON.parse(data);
+    if (!Array.isArray(highscores)) {
+      console.error('Highscores is not an array:', highscores);
+      return res.status(500).json({ error: 'Corrupted highscores data' });
+    }
+    res.json(highscores.sort((a, b) => b.score - a.score).slice(0, 5));
+  } catch (error) {
+    console.error('Error reading highscores:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.post('/api/highscores', async (req, res) => {
   try {
     const { name, score } = req.body;
@@ -102,12 +135,27 @@ app.post('/api/highscores', async (req, res) => {
       return res.status(400).json({ error: 'Inappropriate name detected. Please choose a different name.' });
     }
 
-    const data = await fs.readFile(HIGHSCORES_FILE);
-    let highscores = JSON.parse(data);
+    // Read and validate file contents
+    let highscores = [];
+    try {
+      const data = await fs.readFile(HIGHSCORES_FILE, 'utf8');
+      if (data.trim()) {
+        highscores = JSON.parse(data);
+        if (!Array.isArray(highscores)) {
+          console.error('Highscores is not an array:', highscores);
+          highscores = [];
+        }
+      }
+    } catch (error) {
+      console.warn('Error reading highscores, resetting to empty array:', error);
+      highscores = [];
+    }
 
+    // Add new score
     highscores.push({ name: trimmedName, score, date: new Date().toISOString() });
     highscores = highscores.sort((a, b) => b.score - a.score).slice(0, 5);
 
+    // Write back to file
     await fs.writeFile(HIGHSCORES_FILE, JSON.stringify(highscores, null, 2));
     res.json(highscores);
   } catch (error) {
