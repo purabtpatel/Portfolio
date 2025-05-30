@@ -16,6 +16,8 @@ import {
     faNpm,
     faGitAlt,
 } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import './ProjectFilter.css';
 
 const tagIcons = {
@@ -45,7 +47,8 @@ const ProjectFilter = ({ selectedTags = [], onTagChange }) => {
 
     return (
         <div className="project-filter-column">
-            <div className="project-filter-header">
+            <div className="project-filter-header" >
+                <FontAwesomeIcon icon={faChevronDown} />
                 projects
             </div>
             <div className='project-filters'>

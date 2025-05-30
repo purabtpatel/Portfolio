@@ -9,7 +9,7 @@ function ContactPage() {
     const [form, setForm] = useState({ name: "", email: "", message: "" });
     const [status, setStatus] = useState("");
 
-    const contactHeader = 'Contact me';
+    const contactHeader = 'contact me';
     const contactList = [
         'Email: purabtpatel@gmail.com',
         'Phone: +1 (732)692-3419',

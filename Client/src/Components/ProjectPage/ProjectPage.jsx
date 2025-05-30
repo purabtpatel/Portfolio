@@ -4,7 +4,7 @@ import ProjectFilter from './ProjectFilterComponent/ProjectFilter';
 
 import backgroundImageOne from './BackgroundImages/pexels-alesiakozik-6770610.jpg';
 import backgroundImageTwo from './BackgroundImages/pexels-nate-274598-1036657.jpg';
-import './ProjectPage.css'; // Shared CSS file
+import './ProjectPage.css'; 
 
 const allProjects = [
     {
@@ -14,7 +14,7 @@ const allProjects = [
         description: 'Quickly visualize financial data with this tool.',
         image: backgroundImageOne,
         projectUrl: 'https://github.com/purabtpatel/Financials',
-        tags: ['React', 'CSS', 'Python']
+        tags: ['JavaScript', 'React', 'CSS', 'Python']
     },
     {
         id: 2,
@@ -24,37 +24,7 @@ const allProjects = [
         image: backgroundImageTwo,
         projectUrl: 'https://github.com/purabtpatel/UBSBusinessTracker',
         websiteUrl: 'https://www.businessradar.biz',
-        tags: ['React', 'CSS']
-    },
-    {
-        id: 3,
-        title: 'Project 2',
-        shortDescription: 'Business Radar',
-        description: 'Tailor made for sales and marketing teams.',
-        image: backgroundImageTwo,
-        projectUrl: 'https://github.com/purabtpatel/UBSBusinessTracker',
-        websiteUrl: 'https://www.businessradar.biz',
-        tags: ['React', 'CSS']
-    },
-    {
-        id: 4,
-        title: 'Project 2',
-        shortDescription: 'Business Radar',
-        description: 'Tailor made for sales and marketing teams.',
-        image: backgroundImageTwo,
-        projectUrl: 'https://github.com/purabtpatel/UBSBusinessTracker',
-        websiteUrl: 'https://www.businessradar.biz',
-        tags: ['React', 'CSS']
-    },
-    {
-        id: 5,
-        title: 'Project 2',
-        shortDescription: 'Business Radar',
-        description: 'Tailor made for sales and marketing teams.',
-        image: backgroundImageTwo,
-        projectUrl: 'https://github.com/purabtpatel/UBSBusinessTracker',
-        websiteUrl: 'https://www.businessradar.biz',
-        tags: ['React', 'CSS']
+        tags: ['JavaScript', 'React', 'CSS']
     }
 ];
 

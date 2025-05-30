@@ -50,11 +50,19 @@
 .project-filter-header {
     height: 40px;
     flex-shrink: 0;
+    font-size: 14px;
+    padding: 12px;
     display: flex;
     align-items: center;
     padding: 0 10px;
+    color: var(--accent-blue);
     border-bottom: 1px solid var(--lines);
+    font-family: 'Fira Code Retina', monospace;
+    gap: 7px;
+    text-align: left;
+    align-items: center;
 }
+
 
 .project-filters {
     display: flex;

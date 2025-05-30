@@ -249,7 +249,7 @@ app.get('/api/snippet', snippetLimiter, async (req, res) => {
     return res.status(400).json({ error: 'Missing raw_url query param' });
   }
 
-  const allowedPrefix = 'https://github.com/purabtpatel/Portfolio/';
+  const allowedPrefix = 'https://github.com/purabtpatel';
 
   if (!url.startsWith(allowedPrefix)) {
     console.warn(`Blocked snippet request for invalid URL: ${url}`);

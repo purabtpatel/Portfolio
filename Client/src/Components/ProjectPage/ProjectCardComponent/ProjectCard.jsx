@@ -15,7 +15,7 @@ import {
 
 const tagColors = {
   React: "var(--teal-300)",
-  JavaScript: "var(--accent-orange)",
+  JavaScript: "var(--info-400)",
   Nginx: "var(--success-700)",
   Python: "var(--info-400)",
   NodeJS: "var(--success-500)",
