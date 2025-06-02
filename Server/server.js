@@ -67,7 +67,7 @@ const snippetLimiter = rateLimit({
   },
 });
 
-app.use('/profile-photos', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/profile-photos', express.static(path.join(__dirname, 'uploads')));
 
 
 app.get('/api/highscores', async (req, res) => {
