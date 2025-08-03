@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import './CodeCard.css';
 import CodeSnippet from './CodeSnippet'; // Assuming you have a CodeSnippet component
 
-const CodeCard = ({ message, url, repo, timestamp, files }) => {
+const CodeCard = ({ message, url, repo, timeStamp, files }) => {
   const username = "purabtpatel";
   const avatarUrl = "https://avatars.githubusercontent.com/u/95395767?";
-  const createdAt = new Date(timestamp);
+  const createdAt = new Date(timeStamp);
   const now = new Date();
   const diffInSeconds = Math.floor((now - createdAt) / 1000);
 
@@ -55,7 +55,7 @@ const CodeCard = ({ message, url, repo, timestamp, files }) => {
         <a href={`https://github.com/${repo}/commit/${url.split('/').pop()}`} target="_blank" rel="noopener noreferrer" className="code-card-link">
           <div className='code-card-repoinfo'>
             <span className="code-card-repo">Repo: {repo}</span>
-            <span className="code-card-message">Comment: {message}</span>
+            <span className="code-card-message">Comment: {shortenMessage(message)}</span>
           </div>
         </a>
 
@@ -125,6 +125,15 @@ const shortenFilename = (filename, maxLength) => {
   const end = filename.slice(-maxLength / 2);
   return `${start}...${end}`;
 };
+
+function shortenMessage(message, frontWords = 2, backWords = 3) {
+  const words = message.replace(/\s+/g, ' ').trim().split(' ');
+  if (words.length <= frontWords + backWords) return message;
+
+  const start = words.slice(0, frontWords).join(' ');
+  const end = words.slice(-backWords).join(' ');
+  return `${start}...${end}`;
+}
 
 
 export default CodeCard;

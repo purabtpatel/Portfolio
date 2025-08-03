@@ -8,11 +8,12 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { Filter } from 'bad-words';
+import { timeStamp } from 'console';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const cache = new NodeCache({ stdTTL: 300 }); 
+const cache = new NodeCache({ stdTTL: 300 });
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -44,7 +45,7 @@ const containsProfanity = (str) => {
 
 
 const contactLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, 
+  windowMs: 60 * 60 * 1000,
   max: 50,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many messages sent. Please try again later.' });
@@ -52,15 +53,15 @@ const contactLimiter = rateLimit({
 });
 
 const commitsLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, 
-  max: 200, 
+  windowMs: 60 * 60 * 1000,
+  max: 200,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many requests to fetch commits. Please try again later.' });
   },
 });
 
 const snippetLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, 
+  windowMs: 60 * 60 * 1000,
   max: 200,
   handler: (req, res) => {
     res.status(429).json({ message: 'Too many requests to fetch snippets. Please try again later.' });
@@ -167,42 +168,29 @@ app.post('/api/highscores', async (req, res) => {
   }
 });
 
-app.get('/api/commits', commitsLimiter, async (req, res) => {
-  const cacheKey = 'github_commits';
-  const cachedCommits = cache.get(cacheKey);
-
-  if (cachedCommits) {
-    console.log('Serving from cache');
-    return res.json(cachedCommits);
-  }
-  console.log('Fetching from GitHub API');
-
+app.get('/api/commits', async (req, res) => {
   try {
-    const eventsRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public`, {
-      headers: {
-        Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
-        'User-Agent': 'Portfolio-App'
+
+
+    const commitsRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/Portfolio/commits?per_page=10`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
+          'User-Agent': 'Portfolio-App'
+        }
       }
-    });
+    );
 
-    const events = await eventsRes.json();
+    const commits = await commitsRes.json();
 
-    if (!Array.isArray(events)) {
-      console.error("Unexpected GitHub response:", events);
-      return res.status(500).json({ error: 'GitHub API returned unexpected data', details: events });
+    if (!Array.isArray(commits)) {
+      console.error("Unexpected GitHub response:", commits);
+      return res.status(500).json({ error: 'GitHub API returned unexpected data', details: commits });
     }
 
-    const allCommits = events
-      .filter(event => event.type === 'PushEvent')
-      .flatMap(event => event.payload.commits.map(commit => ({
-        message: commit.message,
-        url: commit.url,
-        repo: event.repo.name,
-        timestamp: event.created_at
-      })));
 
     const commitContents = await Promise.all(
-      allCommits.map(async commit => {
+      commits.map(async commit => {
         const commitRes = await fetch(commit.url, {
           headers: {
             Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
@@ -216,9 +204,15 @@ app.get('/api/commits', commitsLimiter, async (req, res) => {
           !file.filename.match(/\.(css|md|svg|png|jpg|jpeg|json|xml|html|gif|txt|lock|yml|yaml|log|gitignore|config\.js)$/)
         );
 
+
+
         if (files.length > 0) {
           return {
             ...commit,
+            message: commitData.commit.message,
+            url: commitData.html_url,
+            repo: commitData.html_url.split('/')[4],
+            timeStamp: commitData.commit.author.date,
             files: files.map(file => ({
               filename: file.filename,
               raw_url: file.raw_url
@@ -233,11 +227,13 @@ app.get('/api/commits', commitsLimiter, async (req, res) => {
       .filter(commit => commit !== null)
       .slice(0, 10);
 
+    console.log('Valid commits:', validCommits);
+
     if (validCommits.length === 0) {
       return res.status(404).json({ message: 'No commits found with matching files' });
     }
 
-    cache.set(cacheKey, validCommits);
+
     res.json(validCommits);
   } catch (error) {
     console.error(error);
@@ -345,6 +341,73 @@ app.post('/api/contact', contactLimiter, express.json(), async (req, res) => {
     res.status(500).json({ message: 'Failed to send message' });
   }
 });
+
+// app.get('/api/commits', async (req, res) => {
+//   console.log('Fetching commits for user:', GITHUB_USERNAME);
+//   const cacheKey = 'github_commits';
+
+//   try {
+//     const commitsRes = await fetch(
+//       `https://api.github.com/repos/${GITHUB_USERNAME}/Portfolio/commits?per_page=10`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
+//           'User-Agent': 'Portfolio-App'
+//         }
+//       }
+//     );
+
+//     const commits = await commitsRes.json();
+
+//     console.log('GitHub API response:', commits);
+
+//     if (!Array.isArray(commits)) {
+//       console.error("Unexpected GitHub response:", commits);
+//       return res.status(500).json({ error: 'GitHub API returned unexpected data', details: commits });
+//     }
+
+//     const detailedCommits = await Promise.all(
+//       commits.map(async commit => {
+//         const commitRes = await fetch(commit.url, {
+//           headers: {
+//             Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
+//             'User-Agent': 'Portfolio-App'
+//           }
+//         });
+//         const commitData = await commitRes.json();
+
+//         const files = (commitData.files || []).filter(file =>
+//           file.raw_url &&
+//           !file.filename.match(/\.(css|md|svg|png|jpg|jpeg|json|xml|html|gif|txt|lock|yml|yaml|log|gitignore|config\.js)$/)
+//         );
+
+//         if (files.length > 0) {
+//           return {
+//             ...commit,
+//             files: files.map(file => ({
+//               filename: file.filename,
+//               raw_url: file.raw_url
+//             }))
+//           };
+//         }
+//       })
+//     );
+
+//     const validCommits = detailedCommits.slice(0, 10);
+
+//     if (validCommits.length === 0) {
+//       return res.status(404).json({ message: 'No commits found' });
+//     }
+
+//     cache.set(cacheKey, validCommits);
+//     res.json(validCommits);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Error fetching commits');
+//   }
+// });
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
