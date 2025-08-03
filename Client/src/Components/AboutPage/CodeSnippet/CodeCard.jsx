@@ -52,7 +52,7 @@ const CodeCard = ({ message, url, repo, timeStamp, files }) => {
             <></>
           )}
         </div>
-        <a href={`https://github.com/${repo}/commit/${url.split('/').pop()}`} target="_blank" rel="noopener noreferrer" className="code-card-link">
+        <a href={url} target="_blank" rel="noopener noreferrer" className="code-card-link">
           <div className='code-card-repoinfo'>
             <span className="code-card-repo">Repo: {repo}</span>
             <span className="code-card-message">Comment: {shortenMessage(message)}</span>
@@ -85,7 +85,7 @@ const CodeCard = ({ message, url, repo, timeStamp, files }) => {
 
           {files.length > 5 && (
             <a
-              href={`https://github.com/${repo}/commit/${url.split('/').pop()}`}
+              href={url}
               target="_blank"
               rel="noopener noreferrer"
               className="file-button show-more-button"
