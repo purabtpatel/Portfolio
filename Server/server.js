@@ -9,9 +9,16 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { Filter } from 'bad-words';
 import { timeStamp } from 'console';
+import { createClient } from 'redis';
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const redisClient = createClient();
+await redisClient.connect();
+
 
 const cache = new NodeCache({ stdTTL: 300 });
 const app = express();
@@ -342,70 +349,61 @@ app.post('/api/contact', contactLimiter, express.json(), async (req, res) => {
   }
 });
 
-// app.get('/api/commits', async (req, res) => {
-//   console.log('Fetching commits for user:', GITHUB_USERNAME);
-//   const cacheKey = 'github_commits';
+app.get('/api/non-redis-data', async (req, res) => {
+  try{
+   const commitsRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/Portfolio/commits?per_page=10`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
+          'User-Agent': 'Portfolio-App'
+        }
+      }
+    );
 
-//   try {
-//     const commitsRes = await fetch(
-//       `https://api.github.com/repos/${GITHUB_USERNAME}/Portfolio/commits?per_page=10`,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
-//           'User-Agent': 'Portfolio-App'
-//         }
-//       }
-//     );
+    const commits = await commitsRes.json();
+    res.json(commits);
+  }catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching commits');
+  }
+});
 
-//     const commits = await commitsRes.json();
 
-//     console.log('GitHub API response:', commits);
+// Your Express route
+app.get('/api/redis-data', async (req, res) => {
+  const cacheKey = 'github:portfolio:commits';
 
-//     if (!Array.isArray(commits)) {
-//       console.error("Unexpected GitHub response:", commits);
-//       return res.status(500).json({ error: 'GitHub API returned unexpected data', details: commits });
-//     }
+  try {
+    // Check cache
+    const cached = await redisClient.get(cacheKey);
+    if (cached) {
+      return res.json(JSON.parse(cached));
+    }
 
-//     const detailedCommits = await Promise.all(
-//       commits.map(async commit => {
-//         const commitRes = await fetch(commit.url, {
-//           headers: {
-//             Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
-//             'User-Agent': 'Portfolio-App'
-//           }
-//         });
-//         const commitData = await commitRes.json();
+    // If not cached, fetch from GitHub
+    const commitsRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_USERNAME}/Portfolio/commits?per_page=10`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GHUB_TOKEN}`,
+          'User-Agent': 'Portfolio-App'
+        }
+      }
+    );
 
-//         const files = (commitData.files || []).filter(file =>
-//           file.raw_url &&
-//           !file.filename.match(/\.(css|md|svg|png|jpg|jpeg|json|xml|html|gif|txt|lock|yml|yaml|log|gitignore|config\.js)$/)
-//         );
+    const commits = await commitsRes.json();
 
-//         if (files.length > 0) {
-//           return {
-//             ...commit,
-//             files: files.map(file => ({
-//               filename: file.filename,
-//               raw_url: file.raw_url
-//             }))
-//           };
-//         }
-//       })
-//     );
+    // Cache the result for 60 seconds
+    await redisClient.setEx(cacheKey, 60, JSON.stringify(commits));
 
-//     const validCommits = detailedCommits.slice(0, 10);
+    res.json(commits);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching commits');
+  }
+});
 
-//     if (validCommits.length === 0) {
-//       return res.status(404).json({ message: 'No commits found' });
-//     }
 
-//     cache.set(cacheKey, validCommits);
-//     res.json(validCommits);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send('Error fetching commits');
-//   }
-// });
 
 
 
