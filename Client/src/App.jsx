@@ -10,6 +10,21 @@ import RedisTestPage from './Components/RedisTestPage/RedisTestPage';
 
 
 function App() {
+  const uri = import.meta.env.VITE_API_URL;
+  const fetchUrl = `${uri}track`;
+
+  useEffect(() => {
+    fetch(fetchUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        page: window.location.pathname,
+        referrer: document.referrer,
+        userAgent: navigator.userAgent,
+      }),
+    }).catch(() => {});
+  }, []);
+
   return (
  
     <div className='App'>

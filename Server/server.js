@@ -10,7 +10,6 @@ import { fileURLToPath } from 'url';
 import { Filter } from 'bad-words';
 import { timeStamp } from 'console';
 import { createClient } from 'redis';
-import { trackTraffic } from "./tracker.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,12 +21,13 @@ await redisClient.connect();
 
 const cache = new NodeCache({ stdTTL: 300 });
 const app = express();
-app.use(trackTraffic);
+
 app.use(cors());
 app.use(express.json());
 
 const GITHUB_USERNAME = 'purabtpatel';
 const HIGHSCORES_FILE = process.env.HIGHSCORES_FILE_PATH || path.join(__dirname, 'highscores.json');
+const LOG_FILE = "/home/ubuntu/logs/traffic.log";
 
 const profanityFilter = new Filter();
 profanityFilter.addWords('wanker', 'twat');
@@ -405,7 +405,25 @@ app.get('/api/redis-data', async (req, res) => {
 });
 
 
+app.post("/api/track", express.json(), async (req, res) => {
+  try {
+    const { page, referrer, userAgent } = req.body;
 
+    const log = {
+      time: new Date().toISOString(),
+      ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+      page: page || "unknown",
+      referrer: referrer || "",
+      ua: userAgent || req.headers["user-agent"],
+    };
+
+    await fs.promises.appendFile(LOG_FILE, JSON.stringify(log) + "\n");
+    res.sendStatus(204);
+  } catch (err) {
+    console.error("Tracker error:", err);
+    res.sendStatus(500);
+  }
+});
 
 
 const PORT = process.env.PORT || 5000;
