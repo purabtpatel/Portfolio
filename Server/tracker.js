@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 
-const LOG_FILE = path.join(process.cwd(), "traffic.log");
+const LOG_FILE = "/home/ubuntu/logs/traffic.log";
 
 export function trackTraffic(req, res, next) {
   // Skip internal API routes if you only care about frontend hits

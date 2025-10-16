@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { Filter } from 'bad-words';
 import { timeStamp } from 'console';
 import { createClient } from 'redis';
-
+import { trackTraffic } from "./tracker.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +22,7 @@ await redisClient.connect();
 
 const cache = new NodeCache({ stdTTL: 300 });
 const app = express();
+app.use(trackTraffic);
 app.use(cors());
 app.use(express.json());
 
