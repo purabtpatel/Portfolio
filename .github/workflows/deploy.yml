@@ -81,26 +81,19 @@ jobs:
             sudo rm -rf /var/www/html/*
             sudo cp -r ~/app/Client/dist/* /var/www/html/
 
-      - name: Deploy Nginx configuration
+      - name: Deploy Nginx configuration and SSL
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
+            # Write HTTP-only config first — required so nginx can start for the
+            # certbot HTTP challenge on a fresh instance with no certs yet.
             sudo bash -c 'cat > /etc/nginx/sites-available/purabpatel.com' << 'EOF'
             server {
                 listen 80;
                 server_name purabpatel.com www.purabpatel.com;
-                return 301 https://$host$request_uri;
-            }
-
-            server {
-                listen 443 ssl;
-                server_name purabpatel.com www.purabpatel.com;
-
-                ssl_certificate /etc/letsencrypt/live/purabpatel.com/fullchain.pem;
-                ssl_certificate_key /etc/letsencrypt/live/purabpatel.com/privkey.pem;
 
                 location /api/ {
                     proxy_pass http://localhost:5000;
@@ -119,3 +112,21 @@ jobs:
             sudo rm -f /etc/nginx/sites-enabled/default
             sudo nginx -t
             sudo systemctl restart nginx
+
+            # Install certbot if missing
+            if ! command -v certbot &> /dev/null; then
+              sudo apt-get install -y certbot python3-certbot-nginx
+            fi
+
+            # Issue cert (first deploy) or keep existing valid cert (subsequent deploys).
+            # --nginx plugin updates the nginx config with SSL and HTTP→HTTPS redirect.
+            sudo certbot --nginx \
+              -d purabpatel.com \
+              -d www.purabpatel.com \
+              --non-interactive \
+              --agree-tos \
+              -m ${{ secrets.EMAIL_TO }} \
+              --redirect \
+              --keep-until-expiring
+
+            sudo systemctl reload nginx
