@@ -22,6 +22,7 @@ jobs:
         run: |
           echo "VITE_API_URL=https://purabpatel.com/api/" > Client/.env
           cd Client
+          rm -rf node_modules package-lock.json
           npm install
           npm run build
 
