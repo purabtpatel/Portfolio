@@ -1,4 +1,4 @@
-name: Deploy to Lightsail
+name: Deploy to EC2
 
 on:
   push:
@@ -13,37 +13,49 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install rsync
-        run: sudo apt-get update && sudo apt-get install -y rsync
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Upload files to Lightsail
+      - name: Build frontend on CI runner
+        run: |
+          echo "VITE_API_URL=https://purabpatel.com/api/" > Client/.env
+          cd Client
+          npm install
+          npm run build
+
+      - name: Upload Server source to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          source: "."
+          source: "Server"
           target: "~/app"
 
-      - name: SSH into Lightsail and deploy
+      - name: Upload frontend dist to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          source: "Client/dist"
+          target: "~/app"
+
+      - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
-            # Install Node.js if not already installed
+            # Install Node.js and nginx if not already installed
             curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
             sudo apt-get install -y nodejs nginx
-            
-            # Set up folders
-            mkdir -p ~/app/Client ~/app/Server
 
-            # Write Client .env
-            echo "VITE_API_URL=https://purabpatel.com/api/" > ~/app/Client/.env           
-            
-            # Write Server .env
-            sudo bash -c 'cat > ~/app/Server/.env' << 'EOF'
+            # Write Server .env directly (no sudo — user owns their home dir)
+            cat > ~/app/Server/.env << 'ENVEOF'
             PORT=${{ secrets.PORT }}
             GHUB_TOKEN=${{ secrets.GHUB_TOKEN }}
             SMTP_HOST=${{ secrets.SMTP_HOST }}
@@ -52,24 +64,19 @@ jobs:
             SMTP_PASS=${{ secrets.SMTP_PASS }}
             EMAIL_FROM=${{ secrets.EMAIL_FROM }}
             EMAIL_TO=${{ secrets.EMAIL_TO }}
-            EOF
-            
-            # Install dependencies
-            cd ~/app/Client
-            rm -rf node_modules package-lock.json
-            npm install
-            npm run build
+            ENVEOF
 
+            # Install server dependencies
             cd ~/app/Server
             npm install
 
-            # Restart Express backend (using pm2 for process management)
+            # Install pm2 if needed, then start or restart backend
             if ! command -v pm2 &> /dev/null; then
               sudo npm install -g pm2
             fi
-            pm2 start server.js --name backend --cwd ~/app/Server --update-env || pm2 restart backend
+            pm2 start server.js --name backend --cwd ~/app/Server --update-env || pm2 restart backend --update-env
 
-            # Deploy frontend build to NGINX
+            # Deploy built frontend to nginx
             sudo rm -rf /var/www/html/*
             sudo cp -r ~/app/Client/dist/* /var/www/html/
 
@@ -84,7 +91,7 @@ jobs:
             server {
                 listen 80;
                 server_name purabpatel.com www.purabpatel.com;
-                return 301 https://$host$request_uri; # Redirect HTTP to HTTPS
+                return 301 https://$host$request_uri;
             }
 
             server {
@@ -107,14 +114,7 @@ jobs:
             }
             EOF
 
-            # Enable the configuration
             sudo ln -sf /etc/nginx/sites-available/purabpatel.com /etc/nginx/sites-enabled/
-
-            # Remove default Nginx configuration
             sudo rm -f /etc/nginx/sites-enabled/default
-
-            # Test Nginx configuration
             sudo nginx -t
-
-            # Restart Nginx
             sudo systemctl restart nginx
