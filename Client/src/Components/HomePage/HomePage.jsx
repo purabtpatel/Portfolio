@@ -1,6 +1,7 @@
 import React from 'react';
-import PathfindingVisualizer from '../Games/PathfindingVisualizer';
 import './HomePage.css';
+
+const SaphFi = "https://saphfi.ai/";
 
 const HomePage = () => {
     return (
@@ -15,13 +16,13 @@ const HomePage = () => {
                     </span>
                 </div>
                 <div className="home-page-info">
-                    <span className="home-page-comments">// watch the algorithm find the path:</span>
-                    <span className="home-page-comments">// you can see the code on my Github</span>
+                    <span className="home-page-comments">// Check out my latest project:</span>
+                    <span className="home-page-comments">// train your own ML model</span>
                     <div className="home-page-code">
                         <span className="home-page-const">const </span>
-                        <span className="home-page-variable">githubLink</span>
+                        <span className="home-page-variable">SaphFi</span>
                         <span> = </span>
-                        <a href="https://github.com/purabtpatel" target="_blank" rel="noopener noreferrer" className="home-page-link">https://github.com/purabtpatel</a>
+                        <a href={SaphFi} target="_blank" rel="noopener noreferrer" className="home-page-link">{SaphFi}</a>
                     </div>
                 </div>
             </div>
@@ -35,7 +36,11 @@ const HomePage = () => {
                     <div className="screw bottom-left">X</div>
                     <div className="screw bottom-right">X</div>
 
-                    <PathfindingVisualizer />
+                    <a href={SaphFi} target="_blank" rel="noopener noreferrer" className="saphfi-display">
+                        <span className="rail-logo-name" style={{ color: '#f7f9ff' }}>
+                            Saph<span style={{ color: '#d2b9f0f2' }}>Fi</span>
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>
