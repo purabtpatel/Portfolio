@@ -44,6 +44,7 @@ const ProjectCard = ({
   image,
   projectUrl,
   websiteUrl,
+  logoOverlay,
   tags = [],
 }) => {
   return (
@@ -76,6 +77,13 @@ const ProjectCard = ({
               </div>
             ))}
           </div>
+          {logoOverlay && (
+            <div className="project-card-image-overlay">
+              <span className="rail-logo-name" style={{ color: logoOverlay.firstColor }}>
+                {logoOverlay.first}<span style={{ color: logoOverlay.secondColor }}>{logoOverlay.second}</span>
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="project-card-content">
@@ -91,14 +99,16 @@ const ProjectCard = ({
                 View website
               </a>
             )}
-            <a
-              href={projectUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="project-link"
-            >
-              View Project on GitHub
-            </a>
+            {projectUrl && (
+              <a
+                href={projectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="project-link"
+              >
+                View Project on GitHub
+              </a>
+            )}
           </div>
         </div>
       </div>

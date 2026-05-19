@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ProjectGrid from './ProjectGridComponent/ProjectGrid';
 import ProjectFilter from './ProjectFilterComponent/ProjectFilter';
 
-import backgroundImageOne from './BackgroundImages/pexels-alesiakozik-6770610.jpg';
 import backgroundImageTwo from './BackgroundImages/pexels-nate-274598-1036657.jpg';
 import './ProjectPage.css'; 
 
@@ -10,10 +9,11 @@ const allProjects = [
     {
         id: 1,
         title: 'Project 1',
-        shortDescription: 'Financials',
-        description: 'Quickly visualize financial data with this tool.',
-        image: backgroundImageOne,
-        projectUrl: 'https://github.com/purabtpatel/Financials',
+        shortDescription: 'SaphFi',
+        description: 'Develop ML-powered algorithmic trading strategies',
+        image: '/sky.jpg',
+        websiteUrl: 'https://saphfi.ai/',
+        logoOverlay: { first: 'Saph', second: 'Fi', firstColor: '#f7f9ff', secondColor: '#d2b9f0f2' },
         tags: ['JavaScript', 'React', 'CSS', 'Python']
     },
     {

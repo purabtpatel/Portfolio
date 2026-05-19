@@ -28,6 +28,7 @@ const ProjectGrid = ({ projects = sampleProjects }) => {
                             image={project.image}
                             projectUrl={project.projectUrl}
                             websiteUrl={project.websiteUrl}
+                            logoOverlay={project.logoOverlay}
                             tags={project.tags}
                         />
                     ))
