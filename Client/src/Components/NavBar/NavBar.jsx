@@ -14,9 +14,6 @@ const NavBar = () => {
             case "/projects":
                 setActivePage("projects");
                 break;
-            case "/contact":
-                setActivePage("contact_me");
-                break;
             default:
                 setActivePage("home");
         }
@@ -36,9 +33,6 @@ const NavBar = () => {
                 </li>
                 <li className={activePage === "projects" ? "active" : ""}>
                     <Link draggable="false" to="/projects">\projects</Link>
-                </li>
-                <li className={activePage === "contact_me" ? "active" : ""}>
-                    <Link draggable="false" to="/contact">\contact_me</Link>
                 </li>
             </ul>
         </nav>

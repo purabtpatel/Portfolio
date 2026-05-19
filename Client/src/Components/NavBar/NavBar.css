@@ -50,12 +50,7 @@
 }
 
 .navbar-links li:last-child a {
-    border-left: 1px solid var(--lines);
-    
-}
-
-.navbar-links li:last-child {
-    margin-left: auto;
+    border-right: 1px solid var(--lines);
 }
 
 .navbar-links .active a {

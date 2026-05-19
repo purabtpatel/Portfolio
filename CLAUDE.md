@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal portfolio website for Purab Patel. Frontend is React + Vite (`Client/`), backend is Express.js (`Server/`). Deployed to AWS Lightsail via GitHub Actions — Nginx serves the static frontend build and proxies `/api/` to the Express server (port 5000) managed by PM2.
+Personal portfolio website for Purab Patel. Frontend is React + Vite (`Client/`), backend is Express.js (`Server/`). This repository lives directly on the production host machine — Nginx serves the static frontend build and proxies `/api/` to the Express server (port 5000) managed by PM2.
 
 ## Commands
 
@@ -20,6 +20,13 @@ npm run preview   # Preview production build
 ```bash
 npm run dev       # Start with nodemon (auto-reload)
 npm start         # Start with node
+```
+
+### Production (run from anywhere)
+```bash
+pm2 restart portfolio-server   # Restart production server after changes
+pm2 logs portfolio-server      # Tail server logs
+pm2 status                     # Check process status
 ```
 
 ## Architecture

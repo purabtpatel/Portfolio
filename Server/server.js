@@ -15,7 +15,12 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = ['https://purabpatel.com', 'https://www.purabpatel.com'];
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+}));
 app.use(express.json());
 
 const GITHUB_USERNAME = 'purabtpatel';
@@ -77,19 +82,24 @@ const reposLimiter = rateLimit({
   },
 });
 
-app.use('/api/profile-photos', express.static(path.join(__dirname, 'uploads')));
-
-
-app.get('/api/highscores', async (req, res) => {
-  try {
-    const data = await fs.readFile(HIGHSCORES_FILE);
-    const highscores = JSON.parse(data);
-    res.json(highscores.sort((a, b) => b.score - a.score).slice(0, 5));
-  } catch (error) {
-    console.error('Error reading highscores:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
+// GET: generous read limit. POST: tight write limit to prevent score spam.
+const highscoresReadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  handler: (req, res) => {
+    res.status(429).json({ message: 'Too many requests. Please try again later.' });
+  },
 });
+
+const highscoresWriteLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  handler: (req, res) => {
+    res.status(429).json({ message: 'Too many score submissions. Please try again later.' });
+  },
+});
+
+app.use('/api/profile-photos', express.static(path.join(__dirname, 'uploads')));
 
 async function initializeHighscores() {
   try {
@@ -113,7 +123,7 @@ async function initializeHighscores() {
 
 await initializeHighscores();
 
-app.get('/api/highscores', async (req, res) => {
+app.get('/api/highscores', highscoresReadLimiter, async (req, res) => {
   try {
     const data = await fs.readFile(HIGHSCORES_FILE, 'utf8');
     if (!data.trim()) {
@@ -132,7 +142,7 @@ app.get('/api/highscores', async (req, res) => {
   }
 });
 
-app.post('/api/highscores', async (req, res) => {
+app.post('/api/highscores', highscoresWriteLimiter, async (req, res) => {
   try {
     const { name, score } = req.body;
     if (!name || typeof score !== 'number' || score <= 0 || score > 1600) {
@@ -432,7 +442,7 @@ app.post("/api/track", express.json(), async (req, res) => {
       ua: userAgent || req.headers["user-agent"],
     };
 
-    await fs.promises.appendFile(LOG_FILE, JSON.stringify(log) + "\n");
+    await fs.appendFile(LOG_FILE, JSON.stringify(log) + "\n");
     res.sendStatus(204);
   } catch (err) {
     console.error("Tracker error:", err);
